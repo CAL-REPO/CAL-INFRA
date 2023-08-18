@@ -25,20 +25,20 @@ jobs:
         id: decide
         run: |
           if [[ ${{ env.GIT_WORKFLOW_CONDITION }} == "deploy" ]]; then
-            echo "Deploy workflow"
-            echo "::set-output name=workflow::${{ env.GIT_WORKFLOW_DEPLOY_NAME }}"  # Use the actual workflow name in the Master Workflows repository
+          echo "Deploy workflow"
+          echo "WORKFLOW_TO_TRIGGER=${WORKFLOW_DEPLOY}" >> $GITHUB_ENV
           else
             echo "Delete workflow"
-            echo "::set-output name=workflow::${{ env.GIT_WORKFLOW_DELETE_NAME }}"  # Use the actual workflow name in the Master Workflows repository
+            echo "WORKFLOW_TO_TRIGGER=${WORKFLOW_DELETE}" >> $GITHUB_ENV
           fi
         shell: bash
 
       - name: Trigger Appropriate Workflow on Master Workflows Repository
         uses: actions/github-script@v4
         with:
-          github-token: ${{ secrets.GIT_REPO_PERSONAL_TOKEN_INFRA_1 }}
+          github-token: ${{ env.GIT_REPO_TOKEN }}
           script: |
-            const workflowToTrigger = `${{ steps.decide.outputs.workflow }}`;
+            const workflowToTrigger = process.env.WORKFLOW_TO_TRIGGER;
             const response = await octokit.actions.createWorkflowDispatch({
               owner: "${{ env.GIT_REPO_OWNER }}",
               repo: "${{ env.GIT_REPO_NAME }}",
