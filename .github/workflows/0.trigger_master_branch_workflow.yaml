@@ -34,7 +34,7 @@ jobs:
         shell: bash
 
       - name: Trigger Appropriate Workflow on Master Workflows Repository
-        uses: actions/github-script@v3
+        uses: actions/github-script@v4
         with:
           github-token: ${{ env.GIT_REPO_TOKEN }}
           script: |
