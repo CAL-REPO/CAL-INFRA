@@ -41,35 +41,46 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-            ref: master
+          ref: master
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: develop
 
       - name: Set aws profile for terraform from secret to file on github action runner
         env:
           AWS_IAM_KEY_CSV_DATA: ${{ secrets.CAL_SC_CSV_AWS_PROFILE_ENCODED }}
         run: |
-          bash "2.WORKFLOWS_SCRIPT/set_aws_profile_with_csv_data_to_local.sh"
+          ls -al
 
-      - name: Make s3 bucket for terraform backend
-        env:
-          AWS_ACCESS_KEY_ID: ${{ env.INFRA_TF_BACKEND_S3_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}
-          S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
-        run: |
-          bash "2.WORKFLOWS_SCRIPT/make_s3_bucket.sh"
+      # - name: Set aws profile for terraform from secret to file on github action runner
+      #   env:
+      #     AWS_IAM_KEY_CSV_DATA: ${{ secrets.CAL_SC_CSV_AWS_PROFILE_ENCODED }}
+      #   run: |
+      #     bash "2.WORKFLOWS_SCRIPT/set_aws_profile_with_csv_data_to_local.sh"
 
-      - name: Set up terraform version
-        uses: hashicorp/setup-terraform@v2
+      # - name: Make s3 bucket for terraform backend
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ env.INFRA_TF_BACKEND_S3_ACCESS_KEY }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}
+      #     S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
+      #   run: |
+      #     bash "2.WORKFLOWS_SCRIPT/make_s3_bucket.sh"
 
-      - name: Initialize terraform for infrastruture
-        working-directory: 03.TERRAFORM/01.SEOUL
-        run: |
-          terraform init \
-            -backend-config="region=${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}" \
-            -backend-config="bucket=${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}" \
-            -backend-config="key=${{ env.INFRA_TF_BACKEND_S3_BUCKET_OBJ }}" \
-            -backend-config="access_key=${{ env.INFRA_TF_BACKEND_S3_ACCESS_KEY }}" \
-            -backend-config="secret_key=${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}" \
-            -backend-config="encrypt=true"
+      # - name: Set up terraform version
+      #   uses: hashicorp/setup-terraform@v2
+
+      # - name: Initialize terraform for infrastruture
+      #   working-directory: ./03.TERRAFORM/01.SEOUL
+      #   run: |
+      #     terraform init \
+      #       -backend-config="region=${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}" \
+      #       -backend-config="bucket=${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}" \
+      #       -backend-config="key=${{ env.INFRA_TF_BACKEND_S3_BUCKET_OBJ }}" \
+      #       -backend-config="access_key=${{ env.INFRA_TF_BACKEND_S3_ACCESS_KEY }}" \
+      #       -backend-config="secret_key=${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}" \
+      #       -backend-config="encrypt=true"
 
       # - name: Make terraform workspace for infrastructure
       #   working-directory: 03.TERRAFORM/01.SEOUL
