@@ -3,46 +3,12 @@ name: Execute Master Workflow
 on:
   push:
     branches:
-      - deploy  # Replace with the appropriate branch name
+      - develop
 
 jobs:
 
-  trigger-master-workflows:
+  deploy:
     runs-on: ubuntu-latest
 
-    env:
-      GIT_REPO_OWNER: "CAL-REPO"
-      GIT_REPO_NAME: "CAL-INFRA"
-      GIT_REPO_BRANCH: "master"
-      GIT_REPO_TOKEN: ${{ secrets.GIT_REPO_PERSONAL_TOKEN_INFRA_1 }}
-      GIT_WORKFLOW_DEPLOY_NAME: "Deploy Infrastructure"
-      GIT_WORKFLOW_DELETE_NAME: "Delete Infrastructure"
-      GIT_WORKFLOW_CONDITION: "deploy"
-
     steps:
-
-      - name: Determine Workflow to Trigger
-        id: decide
-        run: |
-          if [[ ${{ env.GIT_WORKFLOW_CONDITION }} == "deploy" ]]; then
-          echo "Deploy workflow"
-          echo "WORKFLOW_TO_TRIGGER=${WORKFLOW_DEPLOY}" >> $GITHUB_ENV
-          else
-            echo "Delete workflow"
-            echo "WORKFLOW_TO_TRIGGER=${WORKFLOW_DELETE}" >> $GITHUB_ENV
-          fi
-        shell: bash
-
-      - name: Trigger Appropriate Workflow on Master Workflows Repository
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GIT_REPO_PERSONAL_TOKEN_INFRA_1 }}
-          script: |
-            const workflowToTrigger = process.env.WORKFLOW_TO_TRIGGER;
-            const response = await octokit.rest.actions.createWorkflowDispatch({
-              owner: "CAL-REPO",
-              repo: "CAL-INFRA",
-              workflow_id: workflowToTrigger,
-              ref: "master"  # Use the appropriate branch name
-            });
-            console.log(`Triggered ${workflowToTrigger} in Master Workflows repository`);
+      - run: echo "This workflow trigger workflows on master"
