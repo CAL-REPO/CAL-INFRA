@@ -1,0 +1,55 @@
+- name: Install Git
+  gather_facts: true
+  collections:
+    - community.general
+  hosts: "{{ host_group }}"
+
+
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+    playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
+    playbook_file_name: "{{ playbook_file_path | basename }}"
+
+  tasks:
+
+    - name: Check if Git is installed
+      shell: |
+        git --version
+      register: git_installed
+      ignore_errors: yes
+
+    - name: Print Git version if installed
+      debug:
+        msg: "{{ git_installed.stdout }} version is already installed."
+      when: git_installed.rc == 0
+
+    - name: Install Git
+      become: yes
+      become_user: root
+      apt:
+        name: git
+      when: git_installed.rc != 0 and ansible_os_family == "Debian"
+
+    - name: Install Git (for Red Hat/CentOS)
+      become: yes
+      become_user: root
+      yum:
+        name: git
+      when: git_installed.rc != 0 and ansible_os_family == "RedHat"
+
+    - name: Install Git (for Amazon Linux)
+      become: yes
+      become_user: root
+      yum:
+        name: git
+      when: git_installed.rc != 0 and ansible_distribution == "Amazon"
+
+    # Wait for Git installation to finish
+    - name: Wait for AWS installation to finish
+      shell: |
+        git --version
+      register: git_new_installed
+      until: git_new_installed.rc == 0
+      retries: 60  # Adjust the number of retries as needed
+      delay: 5     # Delay between retries
+      when: git_installed.rc != 0

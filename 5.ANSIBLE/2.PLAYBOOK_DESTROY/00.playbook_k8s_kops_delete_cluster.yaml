@@ -1,0 +1,39 @@
+- name: Create kops cluster
+  gather_facts: false
+  hosts: "{{ host_group }}"
+
+  environment:
+      AWS_PAGER: ""
+      AWS_PROFILE: "{{ AWS_PROFILE }}"  # Set your desired AWS profile here
+
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+    playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
+    playbook_file_name: "{{ playbook_file_path | basename }}"
+
+  tasks:
+
+    # - name: Check if S3 Bucket kops state directory exists
+    #   shell: "aws s3api list-objects --bucket {{ KOPS_STATE_S3_BUCKET }} --prefix {{ KOPS_STATE_S3_DIR }}/ --profile {{ AWS_PROFILE }}"
+    #   ignore_errors: yes
+    #   register: s3_object_status
+
+    # - name: Create S3 Bucket directory for kops state
+    #   shell: "aws s3api put-object --bucket {{ KOPS_STATE_S3_BUCKET }} --key {{ KOPS_STATE_S3_DIR }}/ --profile {{ AWS_PROFILE }}"
+    #   when: s3_object_status.rc != 0
+
+    - name: Check cluster existence
+      shell: |
+        kops get cluster "{{ KOPS_CLUSTER_NAME }}" --state {{ KOPS_STATE_S3 }}
+      register: cluster_exists
+      ignore_errors: true
+      changed_when: false
+
+    - name: Set cluster exists fact
+      set_fact:
+        cluster_exists: "{{ cluster_exists.rc == 0 }}"
+        
+    - name: delete kubernetes cluster
+      shell: |
+        kops delete cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }} --yes
+      when: cluster_exists|default(false)
