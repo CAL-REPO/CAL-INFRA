@@ -5,7 +5,12 @@
 0.SECRET/1.CSV/*
 1.PRE_PUSH_SCRIPT/LINUX/*
 1.PRE_PUSH_SCRIPT/WIN/*
-7.backup
+3.TERRAFORM
+4.EC2_USER_DATA
+5.ANSIBLE
+6.K8S
+
+7.BACKUP
 
 # Relate to terraform
 .terraform/
