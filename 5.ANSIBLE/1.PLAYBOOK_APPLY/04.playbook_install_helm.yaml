@@ -1,0 +1,68 @@
+- name: Install Helm
+  gather_facts: true
+  collections:
+    - community.general
+  hosts: "{{ host_group }}"
+
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+    playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
+    playbook_file_name: "{{ playbook_file_path | basename }}"
+
+  tasks:
+
+    - name: Check if Helm is installed
+      shell: |
+        helm version --short
+      register: helm_installed
+      ignore_errors: yes
+
+    - name: Print Helm version if installed
+      debug:
+        msg: "Helm {{ helm_installed.stdout }} version is already installed."
+      when: helm_installed.rc == 0
+
+    - name: Install required packages for helm
+      become: yes
+      become_user: root
+      apt:
+        name: apt-transport-https
+        state: present
+      when: helm_installed.rc != 0 and ansible_os_family == "Debian"
+
+    - name: Download helm install script
+      become: yes
+      become_user: root
+      get_url:
+        url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        dest: "/home/{{ ansible_user }}/install_helm.sh"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0755
+      when: helm_installed.rc != 0
+
+    - name: Wait for helm install script to be downloaded
+      wait_for:
+        path: "/home/{{ ansible_user }}/install_helm.sh"
+        state: present
+      when: helm_installed.rc != 0
+
+    - name: Run helm install script
+      shell: |
+        "/home/{{ ansible_user }}/install_helm.sh"
+      when: helm_installed.rc != 0
+
+    - name: Wait for helm installation to finish
+      shell: |
+        helm version --short
+      register: helm_new_installed
+      until: helm_new_installed.rc == 0 
+      retries: 60  # Adjust the number of retries as needed
+      delay: 5     # Delay between retries
+      when: helm_installed.rc != 0
+
+    - name: Clean up downloaded files
+      file:
+        path: "/home/{{ ansible_user }}/install_helm.sh"
+        state: absent
+      when: helm_installed.rc != 0

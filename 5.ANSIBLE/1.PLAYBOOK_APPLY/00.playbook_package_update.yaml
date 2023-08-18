@@ -1,0 +1,28 @@
+- name: Update and Upgrade Package
+  gather_facts: true
+  hosts: "{{ host_group }}"
+
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+    playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
+    playbook_file_name: "{{ playbook_file_path | basename }}"
+
+  tasks:
+
+  - name: Wait for updates completed file to be created
+    become: yes
+    become_user: root
+    wait_for:
+      path: /root/user_data_completed
+      state: present
+
+  - name: Update apt cache and upgrade packages (for Debian/Ubuntu)
+    become: yes
+    become_user: root
+    apt:
+      update_cache: yes
+      upgrade: dist
+      autoremove: yes
+      autoclean: yes
+    register: apt_update_upgrade_result
+    when: ansible_os_family == "Debian"
