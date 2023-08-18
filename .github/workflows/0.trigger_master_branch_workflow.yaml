@@ -1,4 +1,4 @@
-name: Trigger Master Workflow on Push to Develop
+name: Execute Master Workflow
 
 on:
   push:
@@ -11,4 +11,4 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo "Running develasdasdop!"
+      - run: echo "This workflow trigger workflows on 'master' branch"
