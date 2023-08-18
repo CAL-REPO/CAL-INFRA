@@ -34,7 +34,7 @@ jobs:
         shell: bash
 
       - name: Trigger Appropriate Workflow on Master Workflows Repository
-        uses: actions/github-script@v4
+        uses: actions/github-script@v3
         with:
           github-token: ${{ env.GIT_REPO_TOKEN }}
           script: |
@@ -46,4 +46,3 @@ jobs:
               ref: "${{ env.GIT_REPO_BRANCH }}"  # Use the appropriate branch name
             });
             console.log(`Triggered ${workflowToTrigger} in Master Workflows repository`);
-###
