@@ -43,11 +43,16 @@ jobs:
         with:
             ref: master
 
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+            ref: deploy
+
       - name: Set aws profile for terraform from secret to file on github action runner
         env:
           AWS_IAM_KEY_CSV_DATA: ${{ secrets.CAL_SC_CSV_AWS_PROFILE_ENCODED }}
         run: |
-          bash "2.WORKFLOWS_SCRIPT/set_aws_profile_with_csv_data_to_local.sh"
+          bash "master/2.WORKFLOWS_SCRIPT/set_aws_profile_with_csv_data_to_local.sh"
 
       - name: Make s3 bucket for terraform backend
         env:
@@ -55,20 +60,16 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}
           S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
         run: |
-          bash "2.WORKFLOWS_SCRIPT/make_s3_bucket.sh"
+          bash "master/2.WORKFLOWS_SCRIPT/make_s3_bucket.sh"
 
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-            ref: deploy
-          
       - name: Set up terraform version
         uses: hashicorp/setup-terraform@v2
 
       - name: Initialize terraform for infrastruture
-        working-directory: 03.TERRAFORM/01.SEOUL
+        working-directory: deploy/03.TERRAFORM/01.SEOUL
         run: |
+          ls -al ./
+          ls -al ../
           terraform init \
             -backend-config="region=${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}" \
             -backend-config="bucket=${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}" \
