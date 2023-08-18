@@ -14,6 +14,7 @@ jobs:
       GIT_REPO_OWNER: "CAL-REPO"
       GIT_REPO_NAME: "CAL-INFRA"
       GIT_REPO_BRANCH: "master"
+      GIT_REPO_TOKEN: ${{ secrets.GIT_REPO_PERSONAL_TOKEN_INFRA_1 }}
       GIT_WORKFLOW_DEPLOY_NAME: "Deploy Infrastructure"
       GIT_WORKFLOW_DELETE_NAME: "Delete Infrastructure"
       GIT_WORKFLOW_CONDITION: "deploy"
@@ -35,7 +36,7 @@ jobs:
       - name: Trigger Appropriate Workflow on Master Workflows Repository
         uses: actions/github-script@v4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ env.GIT_REPO_TOKEN }}
           script: |
             const workflowToTrigger = `${{ steps.decide.outputs.workflow }}`;
             const response = await octokit.actions.createWorkflowDispatch({
