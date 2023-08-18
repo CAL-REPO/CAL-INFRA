@@ -25,10 +25,10 @@ jobs:
         run: |
           if [[ ${{ env.GIT_WORKFLOW_CONDITION }} == "deploy" ]]; then
             echo "Deploy workflow"
-            echo "::set-output name=${{ env.GIT_WORKFLOW_DEPLOY_NAME }}::deploy-workflow"  # Use the actual workflow name in the Master Workflows repository
+            echo "::set-output name=workflow::${{ env.GIT_WORKFLOW_DEPLOY_NAME }}"  # Use the actual workflow name in the Master Workflows repository
           else
             echo "Delete workflow"
-            echo "::set-output name=${{ env.GIT_WORKFLOW_DELETE_NAME }}::delete-workflow"  # Use the actual workflow name in the Master Workflows repository
+            echo "::set-output name=workflow::${{ env.GIT_WORKFLOW_DELETE_NAME }}"  # Use the actual workflow name in the Master Workflows repository
         shell: bash
 
       - name: Trigger Appropriate Workflow on Master Workflows Repository
@@ -38,9 +38,9 @@ jobs:
           script: |
             const workflowToTrigger = `${{ steps.decide.outputs.workflow }}`;
             const response = await octokit.actions.createWorkflowDispatch({
-              owner: ${{ env.GIT_REPO_OWNER }},
-              repo: ${{ env.GIT_REPO_NAME }},
+              owner: "${{ env.GIT_REPO_OWNER }}",
+              repo: "${{ env.GIT_REPO_NAME }}",
               workflow_id: workflowToTrigger,
-              ref: ${{ env.GIT_REPO_BRANCH }}  # Use the appropriate branch name
+              ref: "${{ env.GIT_REPO_BRANCH }}"  # Use the appropriate branch name
             });
             console.log(`Triggered ${workflowToTrigger} in Master Workflows repository`);
