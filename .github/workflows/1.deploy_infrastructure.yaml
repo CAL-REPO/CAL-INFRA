@@ -1,11 +1,9 @@
 name: Deploy Infrastructure
 
 on:
-  workflow_run:
-    workflows:
-      - "Execute Master Workflow"
-    types:
-      - completed
+  push:
+      branches:
+      - master
 
 jobs:
 
