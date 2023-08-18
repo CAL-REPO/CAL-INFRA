@@ -3,12 +3,36 @@ name: Execute Master Workflow
 on:
   push:
     branches:
-      - deploy
+      - deploy  # Replace with the appropriate branch name
 
 jobs:
 
-  deploy:
+  trigger-master-workflows:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo "This workflow trigger workflows on 'master' branch"
+
+      - name: Determine Workflow to Trigger
+        id: decide
+        run: |
+          if [[ condition ]]; then
+            echo "Deploy workflow"
+            echo "::set-output name=Deploy Infrastructure::deploy-workflow"  # Use the actual workflow name in the Master Workflows repository
+          else
+            echo "Delete workflow"
+            echo "::set-output name=Delete Infrastructure::delete-workflow"  # Use the actual workflow name in the Master Workflows repository
+        shell: bash
+
+      - name: Trigger Appropriate Workflow on Master Workflows Repository
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const workflowToTrigger = `${{ steps.decide.outputs.workflow }}`;
+            const response = await octokit.actions.createWorkflowDispatch({
+              owner: 'CAL-REPO',
+              repo: 'CAL-INFRA',
+              workflow_id: workflowToTrigger,
+              ref: 'refs/heads/main'  # Use the appropriate branch name
+            });
+            console.log(`Triggered ${workflowToTrigger} in Master Workflows repository`);
