@@ -12,4 +12,4 @@ DEV manage source files and docker files to create container on DEV repository.
 This project is going to consider process with security.
 If someone figure out any problem with security, please let me know.
 
-But something is delayed to revise for security because of costs problem like .tfvars will be managed in S3 bucket later.
+But something is delayed to revise for security because of costs problem like .tfvars will be managed in S3 bucket later. TEST
