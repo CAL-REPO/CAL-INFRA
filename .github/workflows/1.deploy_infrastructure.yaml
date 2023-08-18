@@ -1,4 +1,4 @@
-name: 1.Set Infrastructure
+name: Deploy Infrastructure
 
 on:
   workflow_run:
@@ -38,12 +38,17 @@ jobs:
       CLOUDFLARE_DOMAIN: ${{ secrets.CLOUDFLARE_DOMAIN_MAIN_1 }}
     
     steps:
-      - run: echo "Running MATSER!"
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+            ref: master
 
-      # - name: Checkout repository
-      #   uses: actions/checkout@v3
-      #   with:
-      #       ref: develop
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+            ref: deploy
+
+      - run: "echo deploy infra"
 
       # - name: Set aws profile for terraform from secret to file on github action runner
       #   env:
@@ -98,30 +103,8 @@ jobs:
       #     TF_VAR_OPS_GIT_REPO_URL: "https://github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
       #     TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
       #   run: |
-      #     # terraform validate
-      #     # terraform plan -var-file="./ENV/dev.tfvars"
+      #     terraform validate
+      #     terraform plan -var-file="./ENV/dev.tfvars"
       #     terraform apply -var-file="./ENV/dev.tfvars" --auto-approve
-#
-      # - name: Destroy Terraform develop Infrastruture
-      #   working-directory: 03.TERRAFORM/01.SEOUL
-      #   env:
-      #     TF_VAR_CF_DOMAIN_MAIN: ${{ env.CLOUDFLARE_DOMAIN }}
-      #     TF_VAR_AWS_KEY_S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
-      #     TF_VAR_AWS_KOPS_STATE_S3_BUCKET: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
-      #     TF_VAR_OPS_USER_NAME: ${{ env.OPS_USER_NAME }}
-      #     TF_VAR_OPS_USER_PW: ${{ env.OPS_USER_PW }}
-      #     TF_VAR_OPS_GIT_REPO_URL: "https://github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
-      #     TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
-      #   run: |
-      #     terraform destroy -var-file="./ENV/dev.tfvars" --auto-approve
-
-      # - name: Remove terraform backend s3 bucket
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.INFRA_TF_BACKEND_S3_ACCESS_KEY }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}
-      #     S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
-      #   run: |
-      #     bash "2.WORKFLOWS_SCRIPT/remove_s3_bucket.sh"
-
 
         
