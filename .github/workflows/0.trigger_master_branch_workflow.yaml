@@ -1,0 +1,17 @@
+name: Trigger Master Workflow on Push to Develop
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Dispatch Master Workflow
+        uses: peter-evans/workflow-dispatch@v1
+        with:
+          workflow: "0.trigger_master_branch_workflow.yaml"  # Path to the trigger-master.yml workflow
