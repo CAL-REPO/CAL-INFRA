@@ -3,7 +3,7 @@ name: 1.Set Infrastructure
 on:
   workflow_run:
     workflows:
-      - "Trigger Master Workflow on Push to Develop"
+      - "Execute Master Workflow"
     types:
       - completed
 
