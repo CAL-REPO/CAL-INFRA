@@ -3,7 +3,7 @@ name: Execute Master Workflow
 on:
   push:
     branches:
-      - develop
+      - deploy
 
 jobs:
 
