@@ -2,7 +2,8 @@ name: 1.Set Infrastructure
 
 on:
   workflow_run:
-    workflows: ["0.Set Secrets"]
+    workflows:
+      - "Trigger Master Workflow on Push to Develop"
     types:
       - completed
 
@@ -37,7 +38,7 @@ jobs:
       CLOUDFLARE_DOMAIN: ${{ secrets.CLOUDFLARE_DOMAIN_MAIN_1 }}
     
     steps:
-      - run: echo "Running!"
+      - run: echo "Running MATSER!"
 
       # - name: Checkout repository
       #   uses: actions/checkout@v3
