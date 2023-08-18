@@ -40,9 +40,9 @@ jobs:
           script: |
             const workflowToTrigger = process.env.WORKFLOW_TO_TRIGGER;
             const response = await octokit.rest.actions.createWorkflowDispatch({
-              owner: "${{ env.GIT_REPO_OWNER }}",
-              repo: "${{ env.GIT_REPO_NAME }}",
+              owner: "CAL-REPO",
+              repo: "CAL-INFRA",
               workflow_id: workflowToTrigger,
-              ref: "${{ env.GIT_REPO_BRANCH }}"  # Use the appropriate branch name
+              ref: "master"  # Use the appropriate branch name
             });
             console.log(`Triggered ${workflowToTrigger} in Master Workflows repository`);
