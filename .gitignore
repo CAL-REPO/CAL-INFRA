@@ -1,16 +1,8 @@
-.git
-
 # If you wanna move secret file location, move to other directory and revise file location on PRE_PUSH_SCRUPT directory files.
 0.SECRET/0.DATA/*
 0.SECRET/1.CSV/*
 1.PRE_PUSH_SCRIPT/LINUX/*
 1.PRE_PUSH_SCRIPT/WIN/*
-3.TERRAFORM
-4.EC2_USER_DATA
-5.ANSIBLE
-6.K8S
-
-7.BACKUP
 
 # Relate to terraform
 .terraform/
