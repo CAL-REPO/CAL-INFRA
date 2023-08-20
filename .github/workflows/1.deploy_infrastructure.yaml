@@ -58,6 +58,7 @@ jobs:
 
       - name: Make s3 bucket for terraform backend
         env:
+          AWS_REGION: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}
           AWS_ACCESS_KEY_ID: ${{ env.INFRA_TF_BACKEND_S3_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}
           S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
