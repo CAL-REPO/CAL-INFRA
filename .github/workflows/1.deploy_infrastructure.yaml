@@ -100,8 +100,8 @@ jobs:
           TF_VAR_OPS_GIT_REPO_URL: "https://github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
           TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
         run: |
-          terraform validate
-          terraform plan -var-file="./ENV/dev.tfvars"
+          # terraform validate
+          # terraform plan -var-file="./ENV/dev.tfvars"
           terraform apply -var-file="./ENV/dev.tfvars" --auto-approve
 
         
