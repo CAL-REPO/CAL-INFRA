@@ -16,7 +16,7 @@ locals {
         KOPS_STATE_S3_BUCKET = "${var.AWS_KOPS_STATE_S3_BUCKET}"
         KOPS_STATE_S3_DIR = "${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
     }
-####
+######
     LOCAL_EXECUTE_APPLY_SCRIPT_ANSIBLE = [
         {
             ALWAYS = true
