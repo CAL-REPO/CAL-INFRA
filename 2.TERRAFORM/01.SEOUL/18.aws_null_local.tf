@@ -16,7 +16,7 @@ locals {
         KOPS_STATE_S3_BUCKET = "${var.AWS_KOPS_STATE_S3_BUCKET}"
         KOPS_STATE_S3_DIR = "${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
     }
-###
+
     LOCAL_EXECUTE_APPLY_SCRIPT_ANSIBLE = [
         {
             ALWAYS = true
@@ -57,7 +57,7 @@ locals {
             KOPS_CLUSTER_ZONES="${local.AWS_REGIONs[0].CODE}a"
             KOPS_CLUSTER_MASTER_ZONES="${local.AWS_REGIONs[0].CODE}a"
             KOPS_CLUSTER_MASTER_SIZE="t3.medium"
-            KOPS_CLUSTER_NODE_SIZE="t3.medium"
+            KOPS_CLUSTER_NODE_SIZE="t2.micro"
             KOPS_CLUSTER_NODE_COUNT=1
             KOPS_CLUSTER_UTILITY_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
             KOPS_CLUSTER_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[2]}"
@@ -66,12 +66,60 @@ locals {
             EOT
             EOF
             POST_COMMAND = <<-EOF
-            export CONFIG_FILE_PATH="${local.LOCAL_EXECUTE_VAR.ANSIBLE_CONF_FILE_PATH}"
-            export INVENTORY_FILE_PATH="${local.LOCAL_EXECUTE_VAR.ANSIBLE_HOST_FILE_PATH}"
-            export PLAYBOOK_DIR="${local.LOCAL_EXECUTE_VAR.ANSIBLE_PLAYBOOK_APPLY_DIR_PATH}"
-            export HOST_GROUP="${local.LOCAL_EXECUTE_VAR.ANSIBLE_HOST_GROUP}"
-            bash "${var.WORKFLOWS_SCRIPT_DIR_PATH}/execute_ansible_playbook.sh"
+            # export CONFIG_FILE_PATH="${local.LOCAL_EXECUTE_VAR.ANSIBLE_CONF_FILE_PATH}"
+            # export INVENTORY_FILE_PATH="${local.LOCAL_EXECUTE_VAR.ANSIBLE_HOST_FILE_PATH}"
+            # export PLAYBOOK_DIR="${local.LOCAL_EXECUTE_VAR.ANSIBLE_PLAYBOOK_APPLY_DIR_PATH}"
+            # export HOST_GROUP="${local.LOCAL_EXECUTE_VAR.ANSIBLE_HOST_GROUP}"
+            # bash "${var.WORKFLOWS_SCRIPT_DIR_PATH}/execute_ansible_playbook.sh"
             EOF
         }
     ]
+}
+
+resource "external" "generate_subnets_config" {
+  program = ["python3", "../../1.WORKFLOWS_SCRIPT/render_template.py"]
+
+    # Pass the subnet variables as JSON input
+    query = {
+
+    }
+
+    depends_on = [templatefile("../../5.K8S/00.kops_cluster_template.j2")]
+}
+
+
+locals {
+    template_input = {
+        KOPS_DIR="${local.REMOTE_HOST_OPS.K8S_DIR}"
+        KOPS_STATE_S3_BUCKET="${local.LOCAL_EXECUTE_VAR.KOPS_STATE_S3_BUCKET}"
+        KOPS_STATE_S3_DIR="${local.LOCAL_EXECUTE_VAR.KOPS_STATE_S3_DIR}"
+        KOPS_STATE_S3="s3://${local.LOCAL_EXECUTE_VAR.KOPS_STATE_S3_BUCKET}/${local.LOCAL_EXECUTE_VAR.KOPS_STATE_S3_DIR}"
+        KOPS_CLUSTER_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
+        KOPS_CLUSTER_USER_NAME="${var.SUB_DOMAINs[0]}"
+        KOPS_CLUSTER_VERSION="v1.27.3"
+        KOPS_CLUSTER_CONTAINER_RUNTIME="containerd"
+        KOPS_CLUSTER_CLOUD="aws"
+        KOPS_CLUSTER_API_PUBLIC_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
+        KOPS_CLUSTER_TOPOLOGY="private"
+        KOPS_CLUSTER_NETWORK="calico"
+        KOPS_CLUSTER_NETWORK_ID="${module.AWS_REG1_VPC1.VPC_ID}"
+        KOPS_CLUSTER_LB_TYPE="internal"
+        KOPS_CLUSTER_LB_CLASS="network"
+        KOPS_CLUSTER_ZONES="${local.AWS_REGIONs[0].CODE}a"
+        KOPS_CLUSTER_MASTER_ZONES="${local.AWS_REGIONs[0].CODE}a"
+        KOPS_CLUSTER_MASTER_SIZE="t3.medium"
+        KOPS_CLUSTER_NODE_SIZE="t2.micro"
+        KOPS_CLUSTER_NODE_COUNT=1
+        KOPS_CLUSTER_UTILITY_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+        KOPS_CLUSTER_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[2]}"
+        KOPS_CLUSTER_BASTION_CIDR="${var.AWS_VPC0_Za_PUB_SN_CIDRs[0]}"
+        KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE="/home/${var.OPS_USER_NAME}/.ssh/authorized_keys"
+    }
+}
+
+resource "null_resource" "trigger_python_template" {
+    triggers = {
+        inputs = jsonencode(local.template_input)
+    }
+    depends_on = [templatefile("../../5.K8S/00.kops_cluster_template.j2")]  # Ensure the template is available
 }

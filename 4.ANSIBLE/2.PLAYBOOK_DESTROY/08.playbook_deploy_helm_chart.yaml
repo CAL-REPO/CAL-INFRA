@@ -1,20 +1,22 @@
-- name: Create kops cluster
+- name: Create Helm Chart
   gather_facts: false
   hosts: "{{ host_group }}"
 
-- name: Create Namespace
-  k8s:
-    state: present
-    definition:
-      kind: Namespace
-      apiVersion: v1
-      metadata:
-        name: my-namespace
+  tasks:
 
-- name: Deploy My Helm Chart
-  helm:
-    name: my-app
-    chart: ./path/to/my-chart
-    namespace: my-namespace
-    values_files:
-      - path/to/my-values.yaml
+  - name: Create Namespace
+    k8s:
+      state: present
+      definition:
+        kind: Namespace
+        apiVersion: v1
+        metadata:
+          name: helm
+
+  - name: Deploy My Helm Chart
+    helm:
+      name: my-app
+      chart: ./path/to/my-chart
+      namespace: helm
+      values_files:
+        - path/to/my-values.yaml

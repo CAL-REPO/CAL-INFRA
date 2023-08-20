@@ -1,0 +1,175 @@
+
+
+# ---
+
+# apiVersion: kops.k8s.io/v1alpha2
+# kind: InstanceGroup
+# metadata:
+#   creationTimestamp: null
+#   labels:
+#     kops.k8s.io/cluster: devkops.calife.co.kr
+#   name: control-plane-ap-northeast-2a
+# spec:
+#   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20230711
+#   machineType: t3.medium
+#   maxSize: 1
+#   minSize: 1
+#   role: Master
+#   subnets:
+#   - ap-northeast-2a-1
+#   - ap-northeast-2a-2
+
+# ---
+
+# apiVersion: kops.k8s.io/v1alpha2
+# kind: InstanceGroup
+# metadata:
+#   creationTimestamp: null
+#   labels:
+#     kops.k8s.io/cluster: devkops.calife.co.kr
+#   name: nodes-ap-northeast-2a
+# spec:
+#   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20230711
+#   machineType: t3.medium
+#   maxSize: 1
+#   minSize: 1
+#   role: Node
+#   subnets:
+#   - ap-northeast-2a-1
+#   - ap-northeast-2a-2
+
+# ---
+
+# apiVersion: kops.k8s.io/v1alpha2
+# kind: SSHCredential
+# metadata:
+#   creationTimestamp: null
+#   labels:
+#     kops.k8s.io/cluster: devkops.calife.co.kr
+#   name: admin
+# spec:
+#   publicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDb3KZ2tqrHVC8xpAwguAlcaRec95hx6rKuI0dIMRpyw8hzBzQX97fWk8JnqkYCT0TrGa3U/jxUyPylMCmiL4HeLXjraKLsM8kESxeFDiT+VNE36OC/XA5Nc/YmxGbaBhMp3DaQ8ExsbcO0KljWbWJ4U4IfRa/Ch9NeppjK0BWnEJc1CG1r75I8fXgvnn8JJy4zlOjNrwOIXgk+I96Pyfb/eF7ffGS5I+pwN1e60vJ8Ojn2ddce40ey3K3FZ51Lad4qz2/tEJTb8s3Q6p/m4P8kOCb3Y3iWIcDSqIqzdn/MHWvMAg3IypHZxoszmHsYAYgbh5OLPWcqDPAWtLEaX9DNjVB+OgNRIfUK/re8RVThPl/zfHTQSqUOh+CcXBGxXXeZo1dy3VMUDjlBaalNb+TfytdJbcAhSGNairBtiVgPUPJS9rzbl3N4ldisSkS6vhWwT6xyh1YSCG/+8vK5ym8gDydQklaJLygC/ZK89naJnZzalzH3yh7V56pQrs/cBHkOfY5xVA+pukPggJwC8miqgOvbd2fpo5UQJBrHR/Y/dGFC4sDbtooMZLHHI805xYyao03Zk4nzD2hVGapop31zHX8j0rKWxkVn4lxBYDA1U8v2ijxHCcwmnHMYmHVi+OANQQTGxTm2gVSG1m1VGrQgHYuRKvCdNbWXTyoTaCO8+Q==
+#     CAL-DEV-AWS-THKIM-SEOUL
+
+apiVersion: kops.k8s.io/v1alpha2
+kind: Cluster
+metadata:
+  name: {{ KOPS_CLUSTER_NAME }}
+spec:
+  kubernetesVersion: {{ KOPS_CLUSTER_VERSION }}
+  containerRuntime: {{ KOPS_CLUSTER_CONTAINER_RUNTIME }}
+  cloudProvider: {{ KOPS_CLUSTER_CLOUD }}
+  authorization:
+    rbac: {}
+  api:
+    loadBalancer:
+      type: {{ KOPS_CLUSTER_LB_TYPE }}
+      class: {{ KOPS_CLUSTER_LB_CLASS }}
+    publicName: {{ KOPS_CLUSTER_API_PUBLIC_NAME }}
+  topology:
+    dns:
+      type: Public
+    masters: {{ KOPS_CLUSTER_MASTER_TOPOLOGY }}
+  networking:
+    networkID: {{ KOPS_CLUSTER_NETWORK_ID }}
+  subnets:
+    utility: "{{ KOPS_CLUSTER_UTILITY_SUBNETS }}"
+    {%- for subnet in KOPS_CLUSTER_SUBNETS %}
+    - cidr: {{ subnet.cidr }}
+      id: {{ subnet.id }}
+      name: {{ subnet.name }}
+      type: {{ subnet.type }}
+      zone: {{ subnet.zone }}
+    {%- endfor %}
+  adminAccess: {{ KOPS_CLUSTER_BASTION_CIDR }}
+  sshPublicKey: "{{ lookup('file', KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE) }}"
+  kubeAPIServer:
+    admissionControl:
+      - AlwaysAdmit
+  {{ KOPS_DRY_RUN | default('') }}
+
+
+apiVersion: kops.k8s.io/v1alpha2
+kind: Cluster
+metadata:
+  creationTimestamp: null
+  name: devkops.calife.co.kr
+spec:
+  api:
+    loadBalancer:
+      class: Network
+      type: Internal
+  authorization:
+    rbac: {}
+  channel: stable
+  cloudProvider: aws
+  configBase: s3://cal-infra-backend/devkops-state/devkops.calife.co.kr
+  containerRuntime: containerd
+  etcdClusters:
+  - cpuRequest: 200m
+    etcdMembers:
+    - encryptedVolume: true
+      instanceGroup: control-plane-ap-northeast-2a
+      name: a
+    manager:
+      backupRetentionDays: 90
+    memoryRequest: 100Mi
+    name: main
+  - cpuRequest: 100m
+    etcdMembers:
+    - encryptedVolume: true
+      instanceGroup: control-plane-ap-northeast-2a
+      name: a
+    manager:
+      backupRetentionDays: 90
+    memoryRequest: 100Mi
+    name: events
+  iam:
+    allowContainerRegistry: true
+    legacy: false
+  kubelet:
+    anonymousAuth: false
+  kubernetesApiAccess:
+  - 10.10.10.0/24
+  kubernetesVersion: v1.27.3
+  masterPublicName: devkops.calife.co.kr
+  networkCIDR: 10.10.0.0/16
+  networkID: vpc-0ed5033ff31934ac9
+  networking:
+    calico: {}
+  nonMasqueradeCIDR: 100.64.0.0/10
+  sshAccess:
+  - 10.10.10.0/24
+  # subnets:
+  # - cidr: 10.10.100.0/24
+  #   id: subnet-0641b1f16f3ea9435
+  #   name: ap-northeast-2a-1
+  #   type: Private
+  #   zone: ap-northeast-2a
+  # - cidr: 10.10.150.0/24
+  #   id: subnet-0641b1f16f3ea9435
+  #   name: ap-northeast-2a-2
+  #   type: Private
+  #   zone: ap-northeast-2a
+  # - cidr: 10.10.50.0/24
+  #   id: subnet-0508a5b8715361b47
+  #   name: utility-ap-northeast-2a
+  #   type: Utility
+  #   zone: ap-northeast-2a
+
+      
+  subnets:
+  {%- for subnet in KOPS_CLUSTER_SUBNETS %}
+    - cidr: {{ subnet['cidr'] }}
+      id: {{ subnet['id'] }}
+      name: {{ subnet['name'] }}
+      type: {{ subnet['type'] }}
+      zone: {{ subnet['zone'] }}
+  {%- endfor %}
+
+
+  topology:
+    dns:
+      type: Public
+    masters: private
+    nodes: private
