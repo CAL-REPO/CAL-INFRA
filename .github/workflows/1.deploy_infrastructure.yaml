@@ -3,7 +3,7 @@ name: Deploy Infrastructure
 on:
   workflow_run:
     workflows:
-      - "Execute Master Workflow"
+      - "Trigger Master Workflow"
     types:
       - completed
 
@@ -41,12 +41,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-            ref: master
-            path: master
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
             ref: deploy
             path: deploy
 
@@ -58,9 +52,9 @@ jobs:
 
       - name: Make s3 bucket for terraform backend
         env:
-          AWS_REGION: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}
           AWS_ACCESS_KEY_ID: ${{ env.INFRA_TF_BACKEND_S3_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}
+          AWS_REGION: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}
           S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
         run: |
           bash "master/2.WORKFLOWS_SCRIPT/make_s3_bucket.sh"
@@ -79,33 +73,33 @@ jobs:
             -backend-config="secret_key=${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}" \
             -backend-config="encrypt=true"
 
-      # - name: Make terraform workspace for infrastructure
-      #   working-directory: 03.TERRAFORM/01.SEOUL
-      #   env:
-      #     TERRAFORM_WORKSPACE_NAME: ${{ env.INFRA_TF_WORKSPACE_NAME_DEV }}
-      #   run: |
-      #     bash "../2.WORKFLOWS_SCRIPT/make_terraform_workspace.sh"
+      - name: Make terraform workspace for infrastructure
+        working-directory: deploy/1.TERRAFORM/01.SEOUL
+        env:
+          TERRAFORM_WORKSPACE_NAME: ${{ env.INFRA_TF_WORKSPACE_NAME_DEV }}
+        run: |
+          bash "../2.WORKFLOWS_SCRIPT/make_terraform_workspace.sh"
 
-      # - name: Select terraform workspace for infrastructure
-      #   working-directory: 03.TERRAFORM/01.SEOUL
-      #   run: |
-      #     terraform workspace select ${{ env.INFRA_TF_WORKSPACE_NAME_DEV }}
+      - name: Select terraform workspace for infrastructure
+        working-directory: deploy/1.TERRAFORM/01.SEOUL
+        run: |
+          terraform workspace select ${{ env.INFRA_TF_WORKSPACE_NAME_DEV }}
 
-      # - name: Plan and Apply Terraform develop Infrastruture
-      #   working-directory: 03.TERRAFORM/01.SEOUL
-      #   env:
-      #     TF_VAR_CF_DOMAIN_MAIN: ${{ env.CLOUDFLARE_DOMAIN }}
-      #     TF_VAR_AWS_KEY_S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
-      #     TF_VAR_AWS_KOPS_STATE_S3_BUCKET: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
-      #     TF_VAR_OPS_USER_NAME: ${{ env.OPS_USER_NAME }}
-      #     TF_VAR_OPS_USER_PW: ${{ env.OPS_USER_PW }}
-      #     TF_VAR_OPS_GIT_USER_NAME: ${{ env.OPS_GIT_USER_NAME }}
-      #     TF_VAR_OPS_GIT_USER_EMAIL: ${{ env.OPS_USER_EMAIL }}  
-      #     TF_VAR_OPS_GIT_REPO_URL: "https://github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
-      #     TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
-      #   run: |
-      #     terraform validate
-      #     terraform plan -var-file="./ENV/dev.tfvars"
-      #     terraform apply -var-file="./ENV/dev.tfvars" --auto-approve
+      - name: Plan and Apply Terraform develop Infrastruture
+        working-directory: deploy/1.TERRAFORM/01.SEOUL
+        env:
+          TF_VAR_CF_DOMAIN_MAIN: ${{ env.CLOUDFLARE_DOMAIN }}
+          TF_VAR_AWS_KEY_S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
+          TF_VAR_AWS_KOPS_STATE_S3_BUCKET: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
+          TF_VAR_OPS_USER_NAME: ${{ env.OPS_USER_NAME }}
+          TF_VAR_OPS_USER_PW: ${{ env.OPS_USER_PW }}
+          TF_VAR_OPS_GIT_USER_NAME: ${{ env.OPS_GIT_USER_NAME }}
+          TF_VAR_OPS_GIT_USER_EMAIL: ${{ env.OPS_USER_EMAIL }}  
+          TF_VAR_OPS_GIT_REPO_URL: "https://github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
+          TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
+        run: |
+          terraform validate
+          terraform plan -var-file="./ENV/dev.tfvars"
+          terraform apply -var-file="./ENV/dev.tfvars" --auto-approve
 
         
