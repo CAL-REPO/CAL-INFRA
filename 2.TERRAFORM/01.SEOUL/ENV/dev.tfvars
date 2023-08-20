@@ -1,8 +1,6 @@
 PRJ_NAME = "CAL-DEV"
 PRJ_VERSION = "1.0"
 
-SUB_DOMAINs = ["devkops"]
-
 AWS_PROFILE_NAME="thkim"
 AWS_KEY_S3_BUCKET_DIR="ec2key"
 
@@ -27,10 +25,10 @@ AWS_INS_VOL_TYPEs = ["gp2"]
 
 AWS_INS_UDs_FILEs = [
     [
-        "../../2.EC2_USER_DATA/user_data_ubuntu_2204_create_new_user.sh",
-        "../../2.EC2_USER_DATA/user_data_ubuntu_2204_avoid_gui_interface.sh",
-        "../../2.EC2_USER_DATA/user_data_ubuntu_2204_nat.sh",
-        "../../2.EC2_USER_DATA/user_data_ubuntu_2204_package.sh"
+        "../../3.EC2_USER_DATA/user_data_ubuntu_2204_create_new_user.sh",
+        "../../3.EC2_USER_DATA/user_data_ubuntu_2204_avoid_gui_interface.sh",
+        "../../3.EC2_USER_DATA/user_data_ubuntu_2204_nat.sh",
+        "../../3.EC2_USER_DATA/user_data_ubuntu_2204_package.sh"
     ]
 ]
 
@@ -38,6 +36,6 @@ WORKFLOWS_SCRIPT_DIR_PATH = "../../1.WORKFLOWS_SCRIPT"
 ANSIBLE_DIR_PATH = "../../4.ANSIBLE"
 K8S_DIR_PATH = "../../5.K8S"
 
-AWS_KOPS_STATE_S3_BUCKET_DIR="devkops-state"
+SUB_DOMAINs = ["devkops"]
 
-#
+AWS_KOPS_STATE_S3_BUCKET_DIR="devkops-state"
