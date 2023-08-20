@@ -25,14 +25,14 @@ AWS_INS_VOL_TYPEs = ["gp2"]
 
 AWS_INS_UDs_FILEs = [
     [
-        "../../4.EC2_USER_DATA/user_data_ubuntu_2204_create_new_user.sh",
-        "../../4.EC2_USER_DATA/user_data_ubuntu_2204_avoid_gui_interface.sh",
-        "../../4.EC2_USER_DATA/user_data_ubuntu_2204_nat.sh",
-        "../../4.EC2_USER_DATA/user_data_ubuntu_2204_package.sh"
+        "../../2.EC2_USER_DATA/user_data_ubuntu_2204_create_new_user.sh",
+        "../../2.EC2_USER_DATA/user_data_ubuntu_2204_avoid_gui_interface.sh",
+        "../../2.EC2_USER_DATA/user_data_ubuntu_2204_nat.sh",
+        "../../2.EC2_USER_DATA/user_data_ubuntu_2204_package.sh"
     ]
 ]
 
 SUB_DOMAINs = ["devkops"]
 AWS_KOPS_STATE_S3_BUCKET_DIR="devkops-state"
-
-####
+ANSIBLE_DIR_PATH = "../../3.ANSIBLE"
+######
