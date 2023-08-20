@@ -1,4 +1,4 @@
-name: Execute Master Workflow
+name: Trigger Master Workflow
 
 on:
   push:

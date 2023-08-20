@@ -1,6 +1,8 @@
 PRJ_NAME = "CAL-DEV"
 PRJ_VERSION = "1.0"
 
+SUB_DOMAINs = ["devkops"]
+
 AWS_PROFILE_NAME="thkim"
 AWS_KEY_S3_BUCKET_DIR="ec2key"
 
@@ -32,7 +34,8 @@ AWS_INS_UDs_FILEs = [
     ]
 ]
 
-SUB_DOMAINs = ["devkops"]
+WORKFLOWS_SCRIPT_DIR_PATH = "../../1.WORKFLOWS_SCRIPT"
+ANSIBLE_DIR_PATH = "../../4.ANSIBLE"
+K8S_DIR_PATH = "../../5.K8S"
+
 AWS_KOPS_STATE_S3_BUCKET_DIR="devkops-state"
-ANSIBLE_DIR_PATH = "../../3.ANSIBLE"
-######

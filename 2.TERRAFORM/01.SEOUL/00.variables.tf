@@ -147,9 +147,14 @@ variable "OPS_GIT_REPO_AUTH_URL" {
     description = "Git repository auth url for OPS"
 }
 
+variable "WORKFLOWS_SCRIPT_DIR_PATH" {
+    type = string
+    default = "./"
+}
+
 variable "ANSIBLE_DIR_PATH" {
-    type = list(string)
-    default = []    
+    type = string
+    default = "./"
 }
 
 variable "PLAYBOOK_FILE_NAME" {

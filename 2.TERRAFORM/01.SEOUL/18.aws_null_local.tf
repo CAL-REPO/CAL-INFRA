@@ -70,7 +70,7 @@ locals {
             export INVENTORY_FILE_PATH="${local.LOCAL_EXECUTE_VAR.ANSIBLE_HOST_FILE_PATH}"
             export PLAYBOOK_DIR="${local.LOCAL_EXECUTE_VAR.ANSIBLE_PLAYBOOK_APPLY_DIR_PATH}"
             export HOST_GROUP="${local.LOCAL_EXECUTE_VAR.ANSIBLE_HOST_GROUP}"
-            bash "../2.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
+            bash "${var.WORKFLOWS_SCRIPT_DIR_PATH}/execute_ansible_playbook.sh"
             EOF
         }
     ]
