@@ -88,25 +88,31 @@
     #     -oyaml > {{ KOPS_DIR }}/{{ KOPS_CLUSTER_NAME }}.yaml
     #   when: not cluster_exists|default(false)
 
-    # - name: Create kubernetes cluster configuration file to s3 bucket
-    #   shell: |
-    #     kops create -f {{ KOPS_CONF_YAML_FILE }} --state {{ KOPS_STATE_S3 }}
-    #   when: not cluster_exists|default(false)
+    - name: Create kubernetes cluster configuration file to s3 bucket
+      shell: |
+        kops create -f {{ KOPS_CONF_YAML_FILE }} --state {{ KOPS_STATE_S3 }}
+      when: not cluster_exists|default(false)
 
-    # - name: Create kubernetes cluster
-    #   shell: |
-    #     kops update cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }} --yes
-    #   when: not cluster_exists|default(false)
+    - name: Create kubernetes cluster
+      shell: |
+        kops update cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }} --yes
+      when: not cluster_exists|default(false)
 
-    # - name: Set kubernetes admin
-    #   shell: |
-    #     kops export kubeconfig --admin --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }}
-    #   when: not cluster_exists|default(false)
+    - name: Set kubernetes admin
+      shell: |
+        kops export kubeconfig --admin --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }}
+      when: not cluster_exists|default(false)
 
-    # - name: Validate kubernetes cluster
-    #   shell: |
-    #     kops validate cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }}
-    #   register: validate_result
-    #   until: validate_result.rc == 0  # Exit loop if return code is 0 (success)
-    #   retries: 30  # Retry 15 times (up to 15 minutes)
-    #   delay: 60    # Wait 1 minute between retries
+    - name: Update kubernetes cluster
+      shell: |
+        kops rolling-update cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }} --yes
+        kops rolling-update cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }} --target {{ KOPS_CONF_YAML_FILE }} --yes --cloudonly
+      when: cluster_exists|default(false)
+
+    - name: Validate kubernetes cluster
+      shell: |
+        kops validate cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }}
+      register: validate_result
+      until: validate_result.rc == 0  # Exit loop if return code is 0 (success)
+      retries: 30  # Retry 15 times (up to 15 minutes)
+      delay: 60    # Wait 1 minute between retries
