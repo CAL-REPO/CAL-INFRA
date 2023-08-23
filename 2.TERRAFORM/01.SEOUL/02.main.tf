@@ -63,6 +63,7 @@ module "AWS_GLOBAL_SERVICE" {
 
 module "CF_ADD_RECORD" {
     source = "git::https://github.com/CAL-REPO/TERRAFORM-CF-RECORD.git?ref=1.0"
+    depends_on = [ module.AWS_GLOBAL_SERVICE ]
 
     RECORDs = local.CF_RECORDs
 }

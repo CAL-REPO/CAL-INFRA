@@ -37,5 +37,4 @@ ANSIBLE_DIR_PATH = "../../4.ANSIBLE"
 K8S_DIR_PATH = "../../5.K8S"
 
 SUB_DOMAINs = ["devkops"]
-
 AWS_KOPS_STATE_S3_BUCKET_DIR="devkops-state"

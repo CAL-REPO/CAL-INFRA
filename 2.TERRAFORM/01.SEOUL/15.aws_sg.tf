@@ -152,7 +152,7 @@ locals {
             ]
         }
         ,{
-            NAME = "${var.PRJ_NAME}-APP-SG"
+            NAME = "${var.PRJ_NAME}-WEB-SG"
             INGRESS = [
                 local.SG_SSH_ALL,
                 local.SG_HTTP_ALL,
