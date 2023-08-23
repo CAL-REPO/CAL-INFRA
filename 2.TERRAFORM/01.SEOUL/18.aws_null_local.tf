@@ -51,8 +51,8 @@ locals {
         KOPS_CLUSTER_ETCD = [
 
             {
-                instanceGroup = "control-plane-ap-northeast-2a"
-                name = a
+                instanceGroup = "MASTER-${local.AWS_REG1_VPC1.NAME[2]}"
+                name = "a"
             }
         ]
         KOPS_CLUSTER_IGS = [
