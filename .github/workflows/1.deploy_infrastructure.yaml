@@ -124,13 +124,14 @@ jobs:
           export CONFIG_FILE_PATH="4.ANSIBLE/0.CONFIG/ansible.cfg"
           export INVENTORY_FILE_PATH="4.ANSIBLE/0.CONFIG/hosts"
           export HOST_GROUP="bastion"
-          if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
-            export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/1.PLAYBOOK_APPLY"
-            bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
-          else
-            # export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/2.PLAYBOOK_DESTROY"
-            # bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
-          fi
+          ls -al $INVENTORY_FILE_PATH
+          # if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
+          #   export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/1.PLAYBOOK_APPLY"
+          #   bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
+          # else
+          #   # export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/2.PLAYBOOK_DESTROY"
+          #   # bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
+          # fi
 
       # - name: Plan and Apply Terraform develop Infrastruture
       #   working-directory: deploy/2.TERRAFORM/01.SEOUL
