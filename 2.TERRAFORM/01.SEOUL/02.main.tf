@@ -68,9 +68,15 @@ module "CF_ADD_RECORD" {
     RECORDs = local.CF_RECORDs
 }
 
+module "LOCAL_EXECUTE_ANSIBLE" {
+    source = "git::https://github.com/CAL-REPO/TERRAFORM-NULL-LOCAL.git?ref=1.0"
+    
+    CREATE_FILEs = local.LOCAL_CREATE_FILEs
+}
+
 module "REMOTE_EXECUTE_ANSIBLE" {
     source = "git::https://github.com/CAL-REPO/TERRAFORM-NULL-REMOTE.git?ref=1.0"
-    depends_on = [ module.AWS_REG1_VPC1_INS ]
+    depends_on = [ module.LOCAL_EXECUTE_ANSIBLE ]
 
     providers = {
         aws = aws.Seoul
@@ -81,13 +87,5 @@ module "REMOTE_EXECUTE_ANSIBLE" {
     REMOTE_HOST = local.REMOTE_HOST_OPS
     REMOTE_PRE_EXECUTEs = local.REMOTE_PRE_EXECUTEs_FOR_OPS
     REMOTE_SEND_FILEs = local.REMOTE_SEND_FILEs_FOR_OPS
-}
-
-module "LOCAL_EXECUTE_SCRIPT_ANSIBLE" {
-    source = "git::https://github.com/CAL-REPO/TERRAFORM-NULL-LOCAL.git?ref=1.0"
-    depends_on = [ module.REMOTE_EXECUTE_ANSIBLE ]
-
-    PROFILE = local.AWS_PROFILEs[0].NAME
-    APPLY_SCRIPTs = local.LOCAL_EXECUTE_APPLY_SCRIPT_ANSIBLE
 }
 

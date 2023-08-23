@@ -155,7 +155,22 @@ variable "ANSIBLE_HOSTS_FILE" {
     description = "Ansible hosts file path"
 }
 
-variable "K8S_FILE_NAME" {
-    type = list(string)
-    default = []    
+varialbe "K8S_TPL_VALUE_NEW_JSON_FILE" {
+    description = "Kubernetes cluster template j2 file path which is created by terraform"
+}
+
+varialbe "K8S_TPL_RENDERER_PY_FILE" {
+    description = "Python script path to render from kubenetes cluster template j2 file to kubernetes cluster configuration yaml file"
+}
+
+varialbe "K8S_TPL_J2_FILE" {
+    description = "Kubernetes cluster template j2 file path to set as ansible variant"
+}
+
+varialbe "K8S_TPL_VALUE_JSON_FILE" {
+    description = "Kubernetes cluster template value json file path to set as ansible variant"
+}
+
+varialbe "K8S_TPL_CONF_YAML_FILE" {
+    description = "Kubernetes cluster configuration file path to set as ansible variant"
 }

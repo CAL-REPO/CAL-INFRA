@@ -1,0 +1,9 @@
+- name: Send File to Host Group
+  gather_facts: false
+  hosts: localhost
+
+  tasks:
+
+    - name: Create 
+      shell: |
+        python {{ LOCAL_K8S_TPL_RENDERER_PY_FILE }} {{ LOCAL_K8S_TPL_J2_FILE }} {{ LOCAL_K8S_TPL_VALUE_JSON_FILE }} {{ LOCAL_K8S_CONF_YAML_FILE }}

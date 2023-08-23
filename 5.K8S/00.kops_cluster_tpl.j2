@@ -1,13 +1,10 @@
-
-
-
 apiVersion: kops.k8s.io/v1alpha2
 kind: Cluster
 metadata:
   name: {{ KOPS_CLUSTER_NAME }}
   creationTimestamp: null
   labels:
-  kops.k8s.io/cluster: devkops.calife.co.kr
+  kops.k8s.io/cluster: {{ KOPS_CLUSTER_NAME }}
 
 spec:
   kubernetesVersion: {{ KOPS_CLUSTER_VERSION }}
@@ -21,9 +18,9 @@ spec:
       class: {{ KOPS_CLUSTER_LB_CLASS }}
     publicName: {{ KOPS_CLUSTER_API_PUBLIC_NAME }}
   channel: stable
-  cloudProvider: aws
-  configBase: s3://cal-infra-backend/devkops-state/devkops.calife.co.kr
-  containerRuntime: containerd
+  cloudProvider: {{ KOPS_CLUSTER_CLOUD }}
+  configBase: {{ KOPS_STATE_S3 }}/{{ KOPS_CLUSTER_NAME }}
+  containerRuntime: {{ KOPS_CLUSTER_CONTAINER_RUNTIME }}
   etcdClusters:
   - cpuRequest: 200m
     etcdMembers:

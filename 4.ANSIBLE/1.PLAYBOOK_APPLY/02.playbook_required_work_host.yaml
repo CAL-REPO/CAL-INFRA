@@ -34,3 +34,11 @@
       file:
         path: /home/{{ ansible_user }}/infra/kops
         state: directory
+
+    - name: Copy kubernetes cluster configuration file to remote hosts
+      copy:
+        src: "{{ LOCAL_K8S_CONF_YAML_FILE }}"
+        dest: "{{ K8S_CONF_YAML_FILE }}"
+        owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
+        group: "{{ ansible_user }}"  # Optional: Set the group of the file
+        mode: 0644  # Optional: Set the permissions of the file
