@@ -125,17 +125,16 @@ jobs:
       - name: Execute Ansible for Bastion Host
         working-directory: deploy
         run: |
-          export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
-          export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
+          export CONFIG_FILE_PATH="./${{ env.INFRA_ANSIBLE_CONF }}"
+          export INVENTORY_FILE_PATH="./${{ env.INFRA_ANSIBLE_HOSTS }}"
           export HOST_GROUP="bastion"
-          ls -al $INVENTORY_FILE_PATH
-          # if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
-          #   export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/1.PLAYBOOK_APPLY"
-          #   bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
-          # else
-          #   # export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/2.PLAYBOOK_DESTROY"
-          #   # bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
-          # fi
+          if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
+            export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/1.PLAYBOOK_APPLY"
+            bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
+          else
+            # export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/2.PLAYBOOK_DESTROY"
+            # bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
+          fi
 
       # - name: Plan and Apply Terraform develop Infrastruture
       #   working-directory: deploy/2.TERRAFORM/01.SEOUL
