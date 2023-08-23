@@ -144,3 +144,16 @@ jobs:
             # export PLAYBOOK_DIR="4.ANSIBLE/2.PLAYBOOK_DESTROY"
             # bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           fi
+
+      # - name: Make s3 bucket for terraform backend
+      #   working-directory: deploy/1.WORKFLOWS_SCRIPT
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ env.INFRA_TF_BACKEND_S3_ACCESS_KEY }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}
+      #     AWS_REGION: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}
+      #     S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
+      #   run: |
+      #     if [[ "${{ env.DEPLOY_MODE }}" != "deploy" ]]; then
+      #       bash "remove_s3_bucket.sh"
+      #     fi
+          
