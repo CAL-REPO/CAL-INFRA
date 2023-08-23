@@ -33,8 +33,12 @@ jobs:
       INFRA_TF_WORKSPACE_NAME_DEV: "dev"
       INFRA_TF_WORKSPACE_NAME_PROD: "prod"
       INFRA_TF_VAR_FILE_NAME_DEV: "./ENV/dev.tfvars"
-      INFRA_ANSIBLE_CONF: 4.ANSIBLE/0.CONFIG/ansible.cfg
-      INFRA_ANSIBLE_HOSTS: 4.ANSIBLE/0.CONFIG/hosts
+      INFRA_ANSIBLE_CONF: "4.ANSIBLE/0.CONFIG/ansible.cfg"
+      INFRA_ANSIBLE_HOSTS: "4.ANSIBLE/0.CONFIG/hosts"
+      INFRA_K8S_TPL_RENDERER_PY_FILE: "1.WORKFLOWS_SCRIPT/render_template.py"
+      INFRA_K8S_TPL_J2_FILE: "5.K8S/00.kops_cluster_tpl.j2"
+      INFRA_K8S_TPL_VALUE_JSON_FILE: "5.K8S/01.kops_cluster_tpl_value.j2"
+      INFRA_K8S_CONF_YAML_FILE: "5.K8S/02.kops_cluster_conf.yaml"
       CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL_MAIN_1 }}
       CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY_MAIN_1 }}
       CLOUDFLARE_DOMAIN: ${{ secrets.CLOUDFLARE_DOMAIN_MAIN_1 }}
@@ -113,13 +117,18 @@ jobs:
           TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
           TF_VAR_ANSIBLE_CONF_FILE: "../../${{ env.INFRA_ANSIBLE_CONF }}"
           TF_VAR_ANSIBLE_HOSTS_FILE: "../../${{ env.INFRA_ANSIBLE_HOSTS }}"
+          TF_VAR_K8S_TPL_VALUE_NEW_JSON_FILE: "../../${{ env.INFRA_K8S_TPL_VALUE_NEW_JSON_FILE }}"
+          TF_VAR_LOCAL_K8S_TPL_RENDERER_PY_FILE: "${{ env.INFRA_K8S_TPL_RENDERER_PY_FILE }}"
+          TF_VAR_LOCAL_K8S_TPL_J2_FILE: "${{ env.INFRA_K8S_TPL_J2_FILE }}"
+          TF_VAR_LOCAL_K8S_TPL_VALUE_JSON_FILE: "${{ env.INFRA_K8S_TPL_VALUE_JSON_FILE }}"
+          TF_VAR_LOCAL_K8S_CONF_YAML_FILE: "${{ env.INFRA_K8S_CONF_YAML_FILE }}"
         run: |
           terraform validate
           terraform plan -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" -out=tfplan
           if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
-            terraform apply "tfplan"
+            terraform apply tfplan
           else
-            terraform destroy "tfplan"
+            terraform destroy tfplan
           fi
 
       - name: Execute Ansible for Bastion Host
@@ -136,13 +145,3 @@ jobs:
             # export PLAYBOOK_DIR="4.ANSIBLE/2.PLAYBOOK_DESTROY"
             # bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           fi
-
-      # - name: Plan and Apply Terraform develop Infrastruture
-      #   working-directory: deploy/2.TERRAFORM/01.SEOUL
-      #   env:
-      #     CONFIG_FILE_PATH: ${EXECUTE_VAR.ANSIBLE_CONF_FILE_PATH}
-      #     INVENTORY_FILE_PATH: ${EXECUTE_VAR.ANSIBLE_HOST_FILE_PATH}
-      #     PLAYBOOK_DIR: ${EXECUTE_VAR.ANSIBLE_PLAYBOOK_APPLY_DIR_PATH}
-      #     HOST_GROUP: ${EXECUTE_VAR.ANSIBLE_HOST_GROUP}
-      #   run: |
-      #     bash "execute_ansible_playbook.sh"
