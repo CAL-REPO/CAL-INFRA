@@ -30,7 +30,7 @@ locals {
             EOF
         }
     ]
-
+##
     # K8S_TEMPLATE_INPUT = {
     #     KOPS_DIR="/home/${var.OPS_USER_NAME}/infra/kops"
     #     KOPS_CLUSTER_USER_NAME="${var.SUB_DOMAINs[0]}"
