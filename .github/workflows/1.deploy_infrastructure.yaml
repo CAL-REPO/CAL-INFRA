@@ -118,7 +118,7 @@ jobs:
             terraform destroy "tfplan"
           fi
 
-      - name: Apply or Destroy Terraform develop Infrastruture
+      - name: Execute Ansible for Bastion Host
         working-directory: deploy
         run: |
           export CONFIG_FILE_PATH="4.ANSIBLE/0.CONFIG/ansible.cfg"
