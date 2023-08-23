@@ -6,10 +6,10 @@
   #     AWS_PAGER: ""
   #     AWS_PROFILE: "{{ AWS_PROFILE }}"  # Set your desired AWS profile here
 
-  vars:
-    ansible_python_interpreter: "/usr/bin/python3"
-    playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
-    playbook_file_name: "{{ playbook_file_path | basename }}"
+  # vars:
+  #   ansible_python_interpreter: "/usr/bin/python3"
+  #   playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
+  #   playbook_file_name: "{{ playbook_file_path | basename }}"
 
   tasks:
 
