@@ -2,9 +2,9 @@
   gather_facts: false
   hosts: "{{ host_group }}"
 
-  environment:
-      AWS_PAGER: ""
-      AWS_PROFILE: "{{ AWS_PROFILE }}"  # Set your desired AWS profile here
+  # environment:
+  #     AWS_PAGER: ""
+  #     AWS_PROFILE: "{{ AWS_PROFILE }}"  # Set your desired AWS profile here
 
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
@@ -15,13 +15,13 @@
 
     - name: Check if S3 Bucket kops state directory exists
       shell: |
-        aws s3api list-objects --bucket {{ KOPS_STATE_S3_BUCKET }} --prefix {{ KOPS_STATE_S3_DIR }}/ --profile {{ AWS_PROFILE }}
+        aws s3api list-objects --bucket "{{ KOPS_STATE_S3_BUCKET }}" --prefix "{{ KOPS_STATE_S3_DIR }}/" --profile "{{ AWS_PROFILE }}"
       ignore_errors: yes
       register: s3_object_status
 
     - name: Create S3 Bucket directory for kops state
       shell: |
-        aws s3api put-object --bucket {{ KOPS_STATE_S3_BUCKET }} --key {{ KOPS_STATE_S3_DIR }}/ --profile {{ AWS_PROFILE }}
+        aws s3api put-object --bucket "{{ KOPS_STATE_S3_BUCKET }}" --key "{{ KOPS_STATE_S3_DIR }}/" --profile "{{ AWS_PROFILE }}"
       when: s3_object_status.rc != 0
 
     - name: Add export statement for AWS_PAGER to ~/.bashrc
