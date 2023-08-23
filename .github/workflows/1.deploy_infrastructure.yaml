@@ -128,7 +128,6 @@ jobs:
           export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
           export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
           export HOST_GROUP="bastion"
-          ls -al "../$CONFIG_FILE_PATH"
           if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
             export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/1.PLAYBOOK_APPLY"
             bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
