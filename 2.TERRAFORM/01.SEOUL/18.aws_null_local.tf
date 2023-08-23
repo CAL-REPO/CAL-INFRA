@@ -22,28 +22,28 @@ locals {
             {
                 cidr="${var.AWS_VPC0_Za_PUB_SN_CIDRs[1]}"
                 id="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
-                name="${local.AWS_REG1_VPC1.NAME[1]}"
+                name="${local.AWS_REG1_VPC1.Za_SNs_NAME[1]}"
                 type="Utility"
                 zone="ap-northeast-2a"
             },
             {
                 cidr="${var.AWS_VPC0_Za_PRI_SN_CIDRs[0]}"
                 id="${module.AWS_REG1_VPC1.Za_SNs_ID[2]}"
-                name="MASTER-${local.AWS_REG1_VPC1.NAME[2]}"
+                name="MASTER-${local.AWS_REG1_VPC1.Za_SNs_NAME[2]}"
                 type="Private"
                 zone="ap-northeast-2a"
             },
             {
                 cidr="${var.AWS_VPC0_Za_PRI_SN_CIDRs[1]}"
                 id="${module.AWS_REG1_VPC1.Za_SNs_ID[3]}"
-                name="NODE-${local.AWS_REG1_VPC1.NAME[3]}"
+                name="NODE-${local.AWS_REG1_VPC1.Za_SNs_NAME[3]}"
                 type="Private"
                 zone="ap-northeast-2a"
             },
             {
                 cidr="${var.AWS_VPC0_Za_PRI_SN_CIDRs[2]}"
                 id="${module.AWS_REG1_VPC1.Za_SNs_ID[4]}"
-                name="NODE-${local.AWS_REG1_VPC1.NAME[4]}"
+                name="NODE-${local.AWS_REG1_VPC1.Za_SNs_NAME[4]}"
                 type="Private"
                 zone="ap-northeast-2a"
             }
@@ -51,37 +51,37 @@ locals {
         KOPS_CLUSTER_ETCD = [
 
             {
-                instanceGroup = "MASTER-${local.AWS_REG1_VPC1.NAME[2]}"
+                instanceGroup = "MASTER-${local.AWS_REG1_VPC1.Za_SNs_NAME[2]}"
                 name = "a"
             }
         ]
         KOPS_CLUSTER_IGS = [
             {
-                name="MASTER-${local.AWS_REG1_VPC1.NAME[2]}"
+                name="MASTER-${local.AWS_REG1_VPC1.Za_SNs_NAME[2]}"
                 image="099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20230711"
                 machineType="t3.medium"
                 maxSize="1"
                 minSize="1"
                 role="master"
-                subnets=["MASTER-${local.AWS_REG1_VPC1.NAME[2]}"]
+                subnets=["MASTER-${local.AWS_REG1_VPC1.Za_SNs_NAME[2]}"]
             },
             {
-                name="NODE-${local.AWS_REG1_VPC1.NAME[3]}"
+                name="NODE-${local.AWS_REG1_VPC1.Za_SNs_NAME[3]}"
                 image="099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20230711"
                 machineType="t2.micro"
                 maxSize="1"
                 minSize="1"
                 role="node"
-                subnets=["NODE-${local.AWS_REG1_VPC1.NAME[3]}"]
+                subnets=["NODE-${local.AWS_REG1_VPC1.Za_SNs_NAME[3]}"]
             },
             {
-                name="NODE-${local.AWS_REG1_VPC1.NAME[4]}"
+                name="NODE-${local.AWS_REG1_VPC1.Za_SNs_NAME[4]}"
                 image="099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20230711"
                 machineType="t2.micro"
                 maxSize="1"
                 minSize="1"
                 role="node"
-                subnets=["NODE-${local.AWS_REG1_VPC1.NAME[4]}"]
+                subnets=["NODE-${local.AWS_REG1_VPC1.Za_SNs_NAME[4]}"]
             }
         ]
     }
