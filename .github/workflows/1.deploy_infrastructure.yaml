@@ -36,9 +36,9 @@ jobs:
       INFRA_ANSIBLE_CONF: "4.ANSIBLE/0.CONFIG/ansible.cfg"
       INFRA_ANSIBLE_HOSTS: "4.ANSIBLE/0.CONFIG/hosts"
       INFRA_KOPS_TPL_RENDERER_PY_FILE: "1.WORKFLOWS_SCRIPT/render_template.py"
-      INFRA_KOPS_TPL_J2_FILE: "5.K8S/00.kops_cluster_tpl.j2"
-      INFRA_KOPS_TPL_VALUE_JSON_FILE: "5.K8S/01.kops_cluster_tpl_value.j2"
-      INFRA_KOPS_CONF_YAML_FILE: "5.K8S/02.kops_cluster_conf.yaml"
+      INFRA_KOPS_TPL_J2_FILE: "5.KOPS/00.kops_cluster_tpl.j2"
+      INFRA_KOPS_TPL_VALUE_JSON_FILE: "5.KOPS/01.kops_cluster_tpl_value.j2"
+      INFRA_KOPS_CONF_YAML_FILE: "5.KOPS/02.kops_cluster_conf.yaml"
       CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL_MAIN_1 }}
       CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY_MAIN_1 }}
       CLOUDFLARE_DOMAIN: ${{ secrets.CLOUDFLARE_DOMAIN_MAIN_1 }}
