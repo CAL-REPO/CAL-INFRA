@@ -100,14 +100,13 @@ jobs:
       - name: Apply or Destroy Terraform develop Infrastruture
         working-directory: deploy/2.TERRAFORM/01.SEOUL
         env:
-          DEPLOY_MODE: ${{ steps.determine_mode.outputs.stdout }} # Pass the deploy mode as an environment variable
           TF_VAR_CF_DOMAIN_MAIN: ${{ env.CLOUDFLARE_DOMAIN }}
           TF_VAR_AWS_KEY_S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
           TF_VAR_AWS_KOPS_STATE_S3_BUCKET: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
           TF_VAR_OPS_USER_NAME: ${{ env.OPS_USER_NAME }}
           TF_VAR_OPS_USER_PW: ${{ env.OPS_USER_PW }}
           TF_VAR_OPS_GIT_USER_NAME: ${{ env.OPS_GIT_USER_NAME }}
-          TF_VAR_OPS_GIT_USER_EMAIL: ${{ env.OPS_USER_EMAIL }}  
+          TF_VAR_OPS_GIT_USER_EMAIL: ${{ env.OPS_GIT_USER_EMAIL }}  
           TF_VAR_OPS_GIT_REPO_URL: "https://github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
           TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
         run: |
