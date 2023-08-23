@@ -53,10 +53,10 @@ locals {
             [local]
             localhost ansible_connection=local ansible_user=runner
             [local:vars]
-            KOPS_TPL_RENDERER_PY_FILE="/${var.KOPS_TPL_RENDERER_PY_FILE}
-            KOPS_TPL_J2_FILE="/${var.KOPS_TPL_J2_FILE}"
-            KOPS_TPL_VALUE_JSON_FILE="/${var.KOPS_TPL_VALUE_JSON_FILE}"
-            KOPS_CONF_YAML_FILE="/${var.KOPS_CONF_YAML_FILE}"
+            KOPS_TPL_RENDERER_PY_FILE="${var.KOPS_TPL_RENDERER_PY_FILE}
+            KOPS_TPL_J2_FILE="${var.KOPS_TPL_J2_FILE}"
+            KOPS_TPL_VALUE_JSON_FILE="${var.KOPS_TPL_VALUE_JSON_FILE}"
+            KOPS_CONF_YAML_FILE="${var.KOPS_CONF_YAML_FILE}"
             [bastion]
             ${module.AWS_REG1_ADD.EIP_IP[0]} ansible_user="${var.OPS_USER_NAME}" ansible_ssh_private_key_file="${module.AWS_REG1_KEY.KEY_PRI_RUNNER_FILE[0]}"
             [bastion:vars]
