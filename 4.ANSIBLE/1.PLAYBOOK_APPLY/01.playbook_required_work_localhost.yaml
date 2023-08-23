@@ -34,13 +34,13 @@
 
     - name: Create kubernetes cluster configuration file with template
       shell: |
-        python "{{ K8S_TPL_RENDERER_PY_FILE }}" "{{ K8S_TPL_J2_FILE }}" "{{ K8S_TPL_VALUE_JSON_FILE }}" "{{ K8S_CONF_YAML_FILE }}"
+        python "{{ KOPS_TPL_RENDERER_PY_FILE }}" "{{ KOPS_TPL_J2_FILE }}" "{{ KOPS_TPL_VALUE_JSON_FILE }}" "{{ KOPS_CONF_YAML_FILE }}"
 
     - name: Read and print the contents of the YAML file
       include_vars:
-        file: "{{ K8S_CONF_YAML_FILE }}"
-      register: k8s_cluster_configuratin_file_contents
+        file: "{{ KOPS_CONF_YAML_FILE }}"
+      register: kOPS_cluster_configuratin_file_contents
 
     - name: Print the contents of the YAML file
       debug:
-        var: k8s_cluster_configuratin_file_contents
+        var: kOPS_cluster_configuratin_file_contents
