@@ -7,7 +7,7 @@
     - name: Create 
       shell: |
         python "{{ K8S_TPL_RENDERER_PY_FILE }}" "{{ K8S_TPL_J2_FILE }}" "{{ K8S_TPL_VALUE_JSON_FILE }}" "{{ K8S_CONF_YAML_FILE }}"
-    
+    #
     - name: Create 
       shell: |
         cat "{{ K8S_CONF_YAML_FILE }}"
