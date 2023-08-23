@@ -8,7 +8,6 @@ on:
       - completed
 
 jobs:
-
   deploy:
     runs-on: ubuntu-latest
 
@@ -33,6 +32,7 @@ jobs:
       INFRA_TF_BACKEND_S3_SECRET_KEY: ${{ secrets.CAL_SC_TF_BACKEND_S3_SECRET_KEY }}
       INFRA_TF_WORKSPACE_NAME_DEV: "dev"
       INFRA_TF_WORKSPACE_NAME_PROD: "prod"
+      INFRA_TF_VAR_FILE_NAME_DEV: "./ENV/dev.tfvars"
       CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL_MAIN_1 }}
       CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY_MAIN_1 }}
       CLOUDFLARE_DOMAIN: ${{ secrets.CLOUDFLARE_DOMAIN_MAIN_1 }}
@@ -43,6 +43,19 @@ jobs:
         with:
             ref: deploy
             path: deploy
+
+      - name: Determine deployment mode
+        id: determine_mode
+        working-directory: deploy/.github/workflows
+        run: |
+          if [[ $(cat terraform_mode) == "deploy" ]]; then
+            echo "deploy"
+          else
+            echo "destroy"
+          fi
+        # Output the result of the step
+        env:
+          DEPLOY_MODE: ${{ steps.determine_mode.outputs.stdout }}
 
       - name: Set aws profile for terraform from secret to file on github action runner
         working-directory: deploy/1.WORKFLOWS_SCRIPT
@@ -87,9 +100,10 @@ jobs:
         run: |
           terraform workspace select ${{ env.INFRA_TF_WORKSPACE_NAME_DEV }}
 
-      - name: Plan and Apply Terraform develop Infrastruture
+      - name: Apply or Destroy Terraform develop Infrastruture
         working-directory: deploy/2.TERRAFORM/01.SEOUL
         env:
+          DEPLOY_MODE: ${{ env.DEPLOY_MODE }} # Pass the deploy mode as an environment variable
           TF_VAR_CF_DOMAIN_MAIN: ${{ env.CLOUDFLARE_DOMAIN }}
           TF_VAR_AWS_KEY_S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
           TF_VAR_AWS_KOPS_STATE_S3_BUCKET: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
@@ -100,9 +114,13 @@ jobs:
           TF_VAR_OPS_GIT_REPO_URL: "https://github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
           TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
         run: |
-          # terraform validate
-          # terraform plan -var-file="./ENV/dev.tfvars"
-          terraform apply -var-file="./ENV/dev.tfvars" --auto-approve
+          terraform validate
+          terraform plan -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}"
+          if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
+            terraform apply -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" --auto-approve
+          else
+            terraform destroy -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" --auto-approve
+          fi
 
       # - name: Plan and Apply Terraform develop Infrastruture
       #   working-directory: deploy/2.TERRAFORM/01.SEOUL
@@ -113,18 +131,3 @@ jobs:
       #     HOST_GROUP: ${EXECUTE_VAR.ANSIBLE_HOST_GROUP}
       #   run: |
       #     bash "execute_ansible_playbook.sh"
-
-      - name: Destroy Terraform develop Infrastruture
-        working-directory: deploy/2.TERRAFORM/01.SEOUL
-        env:
-          TF_VAR_CF_DOMAIN_MAIN: ${{ env.CLOUDFLARE_DOMAIN }}
-          TF_VAR_AWS_KEY_S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
-          TF_VAR_AWS_KOPS_STATE_S3_BUCKET: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
-          TF_VAR_OPS_USER_NAME: ${{ env.OPS_USER_NAME }}
-          TF_VAR_OPS_USER_PW: ${{ env.OPS_USER_PW }}
-          TF_VAR_OPS_GIT_USER_NAME: ${{ env.OPS_GIT_USER_NAME }}
-          TF_VAR_OPS_GIT_USER_EMAIL: ${{ env.OPS_USER_EMAIL }}  
-          TF_VAR_OPS_GIT_REPO_URL: "https://github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
-          TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
-        run: |
-          terraform destroy -var-file="./ENV/dev.tfvars" --auto-approve
