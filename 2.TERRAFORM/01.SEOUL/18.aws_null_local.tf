@@ -21,7 +21,7 @@ locals {
         KOPS_CLUSTER_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[2]},${module.AWS_REG1_VPC1.Za_SNs_ID[3]}"
         KOPS_CLUSTER_BASTION_CIDR="${var.AWS_VPC0_Za_PUB_SN_CIDRs[0]}"
         KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE="/home/${var.OPS_USER_NAME}/.ssh/authorized_keys"
-        ##
+        ####
         # IG = [
         #     {
         #         image
@@ -37,15 +37,15 @@ locals {
             ALWAYS = true
             TYPE = "utf-8"
             FILENAME = "${var.ANSIBLE_CONF_FILE}"
-            CONTENT = <<-EOT
+            CONTENT = <<-EOF
             [defaults]
-            EOT
+            EOF
         },
         {
             ALWAYS = true
             TYPE = "utf-8"
             FILENAME = "${var.ANSIBLE_HOSTS_FILE}"
-            CONTENT = <<-EOT
+            CONTENT = <<-EOF
             [localhost]
             localhost ansible_connection=local
             [localhost:vars]
@@ -74,7 +74,7 @@ locals {
             KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"
             KOPS_STATE_S3_DIR="${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
             KOPS_STATE_S3="s3://${var.AWS_KOPS_STATE_S3_BUCKET}/${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
-            EOT
+            EOF
         },
         {
             ALWAYS = true
