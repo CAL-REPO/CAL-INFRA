@@ -1,4 +1,4 @@
-- name: Send File to Host Group
+- name: Do Required Woking for Local
   gather_facts: false
   hosts: localhost
 
@@ -6,4 +6,4 @@
 
     - name: Create 
       shell: |
-        python {{ LOCAL_K8S_TPL_RENDERER_PY_FILE }} {{ LOCAL_K8S_TPL_J2_FILE }} {{ LOCAL_K8S_TPL_VALUE_JSON_FILE }} {{ LOCAL_K8S_CONF_YAML_FILE }}
+        python {{ K8S_TPL_RENDERER_PY_FILE }} {{ K8S_TPL_J2_FILE }} {{ K8S_TPL_VALUE_JSON_FILE }} {{ K8S_CONF_YAML_FILE }}

@@ -41,10 +41,10 @@ locals {
             [localhost]
             localhost ansible_connection=local
             [localhost:vars]
-            LOCAL_K8S_TPL_RENDERER_PY_FILE="${var.LOCAL_K8S_TPL_RENDERER_PY_FILE}
-            LOCAL_K8S_TPL_J2_FILE="${var.LOCAL_K8S_TPL_J2_FILE}"
-            LOCAL_K8S_TPL_VALUE_JSON_FILE="${var.LOCAL_K8S_TPL_VALUE_JSON_FILE}"
-            LOCAL_K8S_CONF_YAML_FILE="${var.LOCAL_K8S_CONF_YAML_FILE}"
+            K8S_TPL_RENDERER_PY_FILE="${var.K8S_TPL_RENDERER_PY_FILE}
+            K8S_TPL_J2_FILE="${var.K8S_TPL_J2_FILE}"
+            K8S_TPL_VALUE_JSON_FILE="${var.K8S_TPL_VALUE_JSON_FILE}"
+            K8S_CONF_YAML_FILE="${var.K8S_CONF_YAML_FILE}"
             [bastion]
             ${module.AWS_REG1_ADD.EIP_IP[0]} ansible_user="${var.OPS_USER_NAME}" ansible_ssh_private_key_file="${module.AWS_REG1_KEY.KEY_PRI_RUNNER_FILE[0]}"
             [bastion:vars]
@@ -60,8 +60,8 @@ locals {
             GIT_COMMIT_MESSAGE="Commited by infra manager"
             GIT_BRANCH_NAME="initial"
             KOPS_DIR="/home/${var.OPS_USER_NAME}/infra/kops"
-            LOCAL_K8S_CONF_YAML_FILE="${var.LOCAL_K8S_CONF_YAML_FILE}"
-            K8S_CONF_YAML_FILE = "/home/${var.OPS_USER_NAME}/infra/kops/${basename(var.K8S_CONF_YAML_FILE)}"
+            K8S_ORIGIN_CONF_YAML_FILE="${var.K8S_CONF_YAML_FILE}"
+            K8S_CONF_YAML_FILE="/home/${var.OPS_USER_NAME}/infra/kops/${basename(var.K8S_CONF_YAML_FILE)}"
             K8S_CLUSTER_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
             KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"
             KOPS_STATE_S3_DIR="${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
@@ -71,7 +71,7 @@ locals {
         {
             ALWAYS = true
             TYPE = "json"
-            FILENAME = "../../${local.LOCAL_K8S_TPL_VALUE_JSON_FILE}"
+            FILENAME = "../../${local.K8S_TPL_VALUE_JSON_FILE}"
             CONTENT = jsonencode("${local.K8S_TPL_VALUE_INPUT}")
         }
     ]

@@ -1,4 +1,4 @@
-- name: Send File to Host Group
+- name: Do Required Woking for Host
   gather_facts: false
   hosts: "{{ host_group }}"
 
@@ -37,7 +37,7 @@
 
     - name: Copy kubernetes cluster configuration file to remote hosts
       copy:
-        src: "{{ LOCAL_K8S_CONF_YAML_FILE }}"
+        src: "{{ K8S_ORIGIN_CONF_YAML_FILE }}"
         dest: "{{ K8S_CONF_YAML_FILE }}"
         owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
         group: "{{ ansible_user }}"  # Optional: Set the group of the file
