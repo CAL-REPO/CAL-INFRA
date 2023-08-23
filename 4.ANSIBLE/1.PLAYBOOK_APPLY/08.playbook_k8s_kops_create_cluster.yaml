@@ -48,12 +48,6 @@
         line: 'export KOPS_STATE_STORE={{ KOPS_STATE_S3 }}'
         state: present
 
-    - name: Add export statement for KOPS_STATE_STORE to ~/.bashrc
-      lineinfile:
-        dest: "/home/{{ ansible_user }}/.bashrc"
-        line: 'export KOPS_USER={{ KOPS_CLUSTER_USER_NAME }}'
-        state: present
-
     - name: Check cluster existence
       shell: |
         kops get cluster "{{ KOPS_CLUSTER_NAME }}" --state {{ KOPS_STATE_S3 }}
