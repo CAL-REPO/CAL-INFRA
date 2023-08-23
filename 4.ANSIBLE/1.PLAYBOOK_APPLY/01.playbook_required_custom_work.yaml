@@ -1,0 +1,36 @@
+- name: Send File to Host Group
+  gather_facts: false
+  hosts: "{{ host_group }}"
+
+  tasks:
+
+    - name: Create AWS configuration directory
+      file:
+        path: /home/{{ ansible_user }}/infra
+        state: directory
+
+    - name: Create AWS configuration directory
+      file:
+        path: /home/{{ ansible_user }}/.aws
+        state: directory
+
+    - name: Copy file to remote hosts
+      copy:
+        src: /home/runner/.aws/config
+        dest: /home/{{ ansible_user }}/.aws/config
+        owner: {{ ansible_user }}  # Optional: Set the owner of the file
+        group: {{ ansible_user }}  # Optional: Set the group of the file
+        mode: 0644  # Optional: Set the permissions of the file
+
+    - name: Copy file to remote hosts
+      copy:
+        src: /home/runner/.aws/config
+        dest: /home/{{ ansible_user }}/.aws/credentials
+        owner: {{ ansible_user }}  # Optional: Set the owner of the file
+        group: {{ ansible_user }}  # Optional: Set the group of the file
+        mode: 0644  # Optional: Set the permissions of the file
+
+    - name: Create AWS configuration directory
+      file:
+        path: /home/{{ ansible_user }}/infra/kops
+        state: directory

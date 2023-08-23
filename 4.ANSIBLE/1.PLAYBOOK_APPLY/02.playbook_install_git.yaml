@@ -4,7 +4,6 @@
     - community.general
   hosts: "{{ host_group }}"
 
-
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
     playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
