@@ -133,6 +133,7 @@ jobs:
             export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/1.PLAYBOOK_APPLY"
             bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           else
+            echo "test"
             # export PLAYBOOK_DIR="4.ANSIBLE/0.CONFIG/2.PLAYBOOK_DESTROY"
             # bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           fi
