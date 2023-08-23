@@ -37,15 +37,15 @@ locals {
             ALWAYS = true
             TYPE = "utf-8"
             FILENAME = "${var.ANSIBLE_CONF_FILE}"
-            CONTENT = <<-EOF
+            CONTENT = <<-EOT
             [defaults]
-            EOF
+            EOT
         },
         {
             ALWAYS = true
             TYPE = "utf-8"
             FILENAME = "${var.ANSIBLE_HOSTS_FILE}"
-            CONTENT = <<-EOF
+            CONTENT = <<-EOT
             [localhost]
             localhost ansible_connection=local
             [localhost:vars]
@@ -74,7 +74,7 @@ locals {
             KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"
             KOPS_STATE_S3_DIR="${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
             KOPS_STATE_S3="s3://${var.AWS_KOPS_STATE_S3_BUCKET}/${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
-            EOF
+            EOT
         },
         {
             ALWAYS = true
