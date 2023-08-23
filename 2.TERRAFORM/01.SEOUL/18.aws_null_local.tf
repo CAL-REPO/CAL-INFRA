@@ -50,6 +50,8 @@ locals {
             TYPE = "utf-8"
             FILENAME = "${var.ANSIBLE_HOSTS_FILE}"
             CONTENT = <<-EOF
+            [localhost]
+            localhost ansible_connection=local ansible_user=runner
             [localhost:vars]
             KOPS_TPL_RENDERER_PY_FILE="${var.KOPS_TPL_RENDERER_PY_FILE}
             KOPS_TPL_J2_FILE="${var.KOPS_TPL_J2_FILE}"
