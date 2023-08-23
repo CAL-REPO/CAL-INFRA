@@ -50,6 +50,11 @@ locals {
             EOF
         }
     ]
+
+    KOPS_CLUSTER_JSON_VALUE = {
+        
+    }
+
 }
 
 
