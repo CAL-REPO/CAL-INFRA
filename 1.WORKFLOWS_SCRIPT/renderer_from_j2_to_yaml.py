@@ -18,7 +18,7 @@ class TemplateRenderer:
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print("Usage: python script.py <template_path> <input_json> <output_path>")
+        print("Usage: python <rederer_path> <template_path> <input_json> <output_path>")
         sys.exit(1)
 
     template_path = sys.argv[1]

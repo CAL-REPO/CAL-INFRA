@@ -34,14 +34,14 @@
 
     - name: Create kubernetes cluster configuration file with template
       shell: |
-        python "{{ playbook_dir }}/../../{{ KOPS_TPL_RENDERER_PY_FILE }}" \
-              "{{ playbook_dir }}/../../{{ KOPS_TPL_J2_FILE }}" \
-              "{{ playbook_dir }}/../../{{ KOPS_TPL_VALUE_JSON_FILE }}" \
-              "{{ playbook_dir }}/../../{{ KOPS_CONF_YAML_FILE }}"
+        python "{{ KOPS_TPL_RENDERER_PY_FILE }}" \
+                "{{ KOPS_TPL_J2_FILE }}" \
+                "{{ KOPS_TPL_VALUE_JSON_FILE }}" \
+                "{{ KOPS_CONF_YAML_FILE }}"
 
     - name: Read and print the contents of the YAML file
       include_vars:
-        file: "{{ playbook_dir }}/../../{{ KOPS_CONF_YAML_FILE }}"
+        file: "{{ KOPS_CONF_YAML_FILE }}"
       register: kOPS_cluster_configuratin_file_contents
 
     - name: Print the contents of the YAML file
