@@ -15,25 +15,27 @@ spec:
   configBase: {{ KOPS_STATE_S3 }}/{{ KOPS_CLUSTER_NAME }}
   containerRuntime: {{ KOPS_CLUSTER_CONTAINER_RUNTIME }}
   etcdClusters:
-
+  {%- for ETCD in KOPS_CLUSTER_ETCD %}
   - cpuRequest: 200m
     etcdMembers:
     - encryptedVolume: true
-      instanceGroup: control-plane-ap-northeast-2a
-      name: a
+      instanceGroup: {{ ETCD.instanceGroup}}
+      name: {{ ETCD.name}}
     manager:
       backupRetentionDays: 90
     memoryRequest: 100Mi
     name: main
+  {%- endfor %}
+  {%- for ETCD in KOPS_CLUSTER_ETCD %}
   - cpuRequest: 100m
-    etcdMembers:
     - encryptedVolume: true
-      instanceGroup: control-plane-ap-northeast-2a
-      name: a
+      instanceGroup: {{ ETCD.instanceGroup}}
+      name: {{ ETCD.name}}
     manager:
       backupRetentionDays: 90
     memoryRequest: 100Mi
     name: events
+  {%- endfor %}
   iam:
     allowContainerRegistry: true
     legacy: false
@@ -51,13 +53,6 @@ spec:
   sshAccess:
   - {{ KOPS_CLUSTER_BASTION_CIDR }}
   subnets:
-  {%- for SUBNET in KOPS_CLUSTER_UTILITY_SUBNETS %}
-  - cidr: {{ SUBNET.cidr }}
-    id: {{ SUBNET.id }}
-    name: {{ SUBNET.name }}
-    type: {{ SUBNET.type }}
-    zone: {{ SUBNET.zone }}
-  {%- endfor %}
   {%- for SUBNET in KOPS_CLUSTER_SUBNETS %}
   - cidr: {{ SUBNET.cidr }}
     id: {{ SUBNET.id }}
