@@ -125,8 +125,8 @@ jobs:
       - name: Execute Ansible for Bastion Host
         working-directory: deploy
         run: |
-          export CONFIG_FILE_PATH="./${{ env.INFRA_ANSIBLE_CONF }}"
-          export INVENTORY_FILE_PATH="./${{ env.INFRA_ANSIBLE_HOSTS }}"
+          export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
+          export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
           export HOST_GROUP="bastion"
           ls -al "../$CONFIG_FILE_PATH"
           if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
