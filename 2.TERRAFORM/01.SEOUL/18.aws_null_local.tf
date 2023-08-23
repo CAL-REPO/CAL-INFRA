@@ -11,22 +11,38 @@ locals {
         KOPS_CLUSTER_CONTAINER_RUNTIME="containerd"
         KOPS_CLUSTER_CLOUD="aws"
         KOPS_CLUSTER_API_PUBLIC_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
-        KOPS_CLUSTER_TOPOLOGY="private"
+        KOPS_CLUSTER_MASTER_TOPOLOGY="private"
+        KOPS_CLUSTER_NODE_TOPOLOGY="private"
         KOPS_CLUSTER_NETWORK="calico"
         KOPS_CLUSTER_NETWORK_ID="${module.AWS_REG1_VPC1.VPC_ID}"
+        KOPS_CLUSTER_NETWORK_CIDR=""
         KOPS_CLUSTER_LB_TYPE="internal"
         KOPS_CLUSTER_LB_CLASS="network"
         KOPS_CLUSTER_ZONES="${local.AWS_REGIONs[0].CODE}a"
         KOPS_CLUSTER_MASTER_ZONES="${local.AWS_REGIONs[0].CODE}a"
-        KOPS_CLUSTER_MASTER_SIZE="t3.medium"
-        KOPS_CLUSTER_NODE_SIZE="t2.micro"
-        KOPS_CLUSTER_NODE_COUNT=1
+        # KOPS_CLUSTER_ETCD = [
+        #     {
+        #         cpuRequest = "200m"
+        #         etcdMembers = [
+        #             {
+        #                 encryptedVolume = true
+        #                 instanceGroup = 
+        #                 name = a
+        #             }
+        #         ]
+        #         manager = {
+        #             backupRetentionDays = 90
+        #         }
+        #         memoryRequest = "100Mi"
+        #         name = "main"
+        #     }
+        # ]
         KOPS_CLUSTER_UTILITY_SUBNETS=[
             {
                 cidr="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
                 id="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
                 name="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
-                type="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+                type="Private"
                 zone="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
             }
         ]
@@ -35,21 +51,33 @@ locals {
                 cidr="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
                 id="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
                 name="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
-                type="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
-                zone="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+                type="Utility"
+                zone="ap-northeast-2a"
             }
         ]
         KOPS_CLUSTER_BASTION_CIDR="${var.AWS_VPC0_Za_PUB_SN_CIDRs[0]}"
         KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE="/home/${var.OPS_USER_NAME}/.ssh/authorized_keys"
-        ####
-        # IG = [
-        #     {
-        #         image
-        #         machineType
-        #         maxSize
-        #         minSize
-        #     }
-        # ]
+
+        KOPS_CLUSTER_IGS = [
+            {
+                name="control-plane-ap-northeast-2a"
+                image="099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20230711"
+                machineType="t3.medium"
+                maxSize="1"
+                minSize="1"
+                role="master"
+                subnets=["ap-northeast-2a"]
+            },
+            {
+                name="nodes-ap-northeast-2a"
+                image="099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20230711"
+                machineType="t2.micro"
+                maxSize="1"
+                minSize="1"
+                role="node"
+                subnets=["ap-northeast-2a"]
+            }
+        ]
     }
 
     LOCAL_CREATE_FILEs = [
