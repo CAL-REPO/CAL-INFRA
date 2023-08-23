@@ -5,6 +5,7 @@
   environment:
       AWS_PAGER: ""
       AWS_PROFILE: "{{ AWS_PROFILE }}"  # Set your desired AWS profile here
+      KOPS_STATE_S3: "{{ KOPS_STATE_S3 }}"
 
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
@@ -50,7 +51,7 @@
 
     - name: Check cluster existence
       shell: |
-        kops get cluster "{{ KOPS_CLUSTER_NAME }}" --state {{ KOPS_STATE_S3 }}
+        kops get cluster "{{ KOPS_CLUSTER_NAME }}"
       register: cluster_exists
       ignore_errors: true
       changed_when: false
@@ -87,10 +88,10 @@
     #     -oyaml > {{ KOPS_DIR }}/{{ KOPS_CLUSTER_NAME }}.yaml
     #   when: not cluster_exists|default(false)
 
-    - name: Create kubernetes cluster configuration file to s3 bucket
-      shell: |
-        kops create -f {{ KOPS_CONF_YAML_FILE }} --state {{ KOPS_STATE_S3 }}
-      when: not cluster_exists|default(false)
+    # - name: Create kubernetes cluster configuration file to s3 bucket
+    #   shell: |
+    #     kops create -f {{ KOPS_CONF_YAML_FILE }} --state {{ KOPS_STATE_S3 }}
+    #   when: not cluster_exists|default(false)
 
     # - name: Create kubernetes cluster
     #   shell: |
