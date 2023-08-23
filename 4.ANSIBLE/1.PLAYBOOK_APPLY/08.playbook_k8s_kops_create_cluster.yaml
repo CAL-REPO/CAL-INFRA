@@ -61,7 +61,6 @@
 
     # - name: Create Kubernetes cluster configuration file to local
     #   shell: |
-    #     export KOPS_USER={{ KOPS_CLUSTER_USER_NAME }}
     #     kops create cluster \
     #     --state {{ KOPS_STATE_S3 }} \
     #     --name {{ KOPS_CLUSTER_NAME }} \

@@ -4,7 +4,7 @@
 
   tasks:
 
-    - name: Create AWS configuration directory
+    - name: Create Git configuration directory
       file:
         path: /home/{{ ansible_user }}/infra
         state: directory
@@ -14,7 +14,7 @@
         path: /home/{{ ansible_user }}/.aws
         state: directory
 
-    - name: Copy file to remote hosts
+    - name: Copy AWS configuration file to remote hosts
       copy:
         src: /home/runner/.aws/config
         dest: /home/{{ ansible_user }}/.aws/config
@@ -22,15 +22,15 @@
         group: "{{ ansible_user }}"  # Optional: Set the group of the file
         mode: 0644  # Optional: Set the permissions of the file
 
-    - name: Copy file to remote hosts
+    - name: Copy AWS credential file to remote hosts
       copy:
-        src: /home/runner/.aws/config
+        src: /home/runner/.aws/credentials
         dest: /home/{{ ansible_user }}/.aws/credentials
         owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
         group: "{{ ansible_user }}"  # Optional: Set the group of the file
         mode: 0644  # Optional: Set the permissions of the file
 
-    - name: Create AWS configuration directory
+    - name: Create kops directory
       file:
         path: /home/{{ ansible_user }}/infra/kops
         state: directory
