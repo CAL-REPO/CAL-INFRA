@@ -8,9 +8,9 @@ locals {
             [defaults]
             EOT
             cat <<-EOT > "${var.ANSIBLE_DIR_PATH}/0.CONFIG/hosts"
-            [${local.LOCAL_EXECUTE_VAR.ANSIBLE_HOST_GROUP}]
+            [bastion]
             ${module.AWS_REG1_ADD.EIP_IP[0]} ansible_user="${var.OPS_USER_NAME}" ansible_ssh_private_key_file="${module.AWS_REG1_KEY.KEY_PRI_RUNNER_FILE[0]}"
-            [${local.LOCAL_EXECUTE_VAR.ANSIBLE_HOST_GROUP}:vars]
+            [bastion:vars]
             MAIN_DOMAIN="${var.CF_DOMAIN_MAIN}"
             AWS_PAGER=""
             AWS_PROFILE="${local.AWS_PROFILEs[0].NAME}"

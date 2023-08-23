@@ -16,8 +16,8 @@ locals {
         {
             ALWAYS = false
             COMMANDs = [
-                "if [ -f ${local.REMOTE_HOST_OPS.USER_DIR}/.ssh/${local.REMOTE_HOST_OPS.KOPS_PRI_KEY_FILE_NAME} ]; then",
-                "  sudo rm -rf ${local.REMOTE_HOST_OPS.USER_DIR}/.ssh/${local.REMOTE_HOST_OPS.KOPS_PRI_KEY_FILE_NAME}",
+                "if [ -f ${local.REMOTE_HOST_OPS.USER_DIR}/.ssh/${local.REMOTE_HOST_OPS.PRI_KEY_FILE} ]; then",
+                "  sudo rm -rf ${local.REMOTE_HOST_OPS.USER_DIR}/.ssh/${local.REMOTE_HOST_OPS.PRI_KEY_FILE}",
                 "fi"
             ]
         }
@@ -27,8 +27,8 @@ locals {
         {
             ALWAYS = false
             SOURCE = "${local.RUNNER_HOST.PRI_KEY_FILE}"
-            DESTINATION = "${local.REMOTE_HOST_OPS.USER_DIR}/.ssh/${local.REMOTE_HOST_OPS.KOPS_PRI_KEY_FILE_NAME}"
-            COMMANDs = ["sudo chmod 400 ${local.REMOTE_HOST_OPS.USER_DIR}/.ssh/${local.REMOTE_HOST_OPS.KOPS_PRI_KEY_FILE_NAME}"]
+            DESTINATION = "${local.REMOTE_HOST_OPS.USER_DIR}/.ssh/${local.REMOTE_HOST_OPS.PRI_KEY_FILE}"
+            COMMANDs = ["sudo chmod 400 ${local.REMOTE_HOST_OPS.USER_DIR}/.ssh/${local.REMOTE_HOST_OPS.PRI_KEY_FILE}"]
         }
     ]
 
