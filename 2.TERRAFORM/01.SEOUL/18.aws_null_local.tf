@@ -25,7 +25,7 @@ locals {
             KOPS_DIR="/home/${var.OPS_USER_NAME}/infra/kops"
             KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"
             KOPS_STATE_S3_DIR="${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
-            KOPS_STATE_S3="s3://${local.LOCAL_EXECUTE_VAR.KOPS_STATE_S3_BUCKET}/${local.LOCAL_EXECUTE_VAR.KOPS_STATE_S3_DIR}"
+            KOPS_STATE_S3="s3://${var.AWS_KOPS_STATE_S3_BUCKET}/${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
             KOPS_CLUSTER_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
             KOPS_CLUSTER_USER_NAME="${var.SUB_DOMAINs[0]}"
             KOPS_CLUSTER_VERSION="v1.27.3"
