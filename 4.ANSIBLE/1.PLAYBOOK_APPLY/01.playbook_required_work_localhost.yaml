@@ -1,22 +1,33 @@
 - name: Do Required Woking for Local
-  gather_facts: false
+  gather_facts: true
   hosts: local
+
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+    playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
+    playbook_file_name: "{{ playbook_file_path | basename }}"
 
   tasks:
 
     - name: Install pip
+      become: true
+      become_user: root
       apt:
         name: python3-pip
         state: present
       when: ansible_os_family == 'Debian'
 
     - name: Install Pip (for RedHat/CentOS)
+      become: true
+      become_user: root
       yum:
         name: python3-pip
         state: present
       when: ansible_os_family == 'RedHat'
 
     - name: Install Jinja2
+      become: true
+      become_user: root
       pip:
         name: Jinja2
         executable: pip3
@@ -25,6 +36,11 @@
       shell: |
         python "{{ K8S_TPL_RENDERER_PY_FILE }}" "{{ K8S_TPL_J2_FILE }}" "{{ K8S_TPL_VALUE_JSON_FILE }}" "{{ K8S_CONF_YAML_FILE }}"
 
-    - name: Check
-      shell: |
-        cat "{{ K8S_CONF_YAML_FILE }}"
+    - name: Read and print the contents of the YAML file
+      include_vars:
+        file: "{{ K8S_CONF_YAML_FILE }}"
+      register: k8s_cluster_configuratin_file_contents
+
+    - name: Print the contents of the YAML file
+      debug:
+        var: k8s_cluster_configuratin_file_contents
