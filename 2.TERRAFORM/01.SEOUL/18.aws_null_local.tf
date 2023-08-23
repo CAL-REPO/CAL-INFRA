@@ -21,8 +21,24 @@ locals {
         KOPS_CLUSTER_MASTER_SIZE="t3.medium"
         KOPS_CLUSTER_NODE_SIZE="t2.micro"
         KOPS_CLUSTER_NODE_COUNT=1
-        KOPS_CLUSTER_UTILITY_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
-        KOPS_CLUSTER_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[2]},${module.AWS_REG1_VPC1.Za_SNs_ID[3]}"
+        KOPS_CLUSTER_UTILITY_SUBNETS=[
+            {
+                cidr="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+                id="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+                name="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+                type="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+                zone="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+            }
+        ]
+        KOPS_CLUSTER_SUBNETS=[
+            {
+                cidr="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+                id="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+                name="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+                type="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+                zone="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+            }
+        ]
         KOPS_CLUSTER_BASTION_CIDR="${var.AWS_VPC0_Za_PUB_SN_CIDRs[0]}"
         KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE="/home/${var.OPS_USER_NAME}/.ssh/authorized_keys"
         ####
