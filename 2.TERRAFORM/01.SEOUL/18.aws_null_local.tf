@@ -71,7 +71,7 @@ locals {
         {
             ALWAYS = true
             TYPE = "json"
-            FILENAME = "../../${local.K8S_TPL_VALUE_JSON_FILE}"
+            FILENAME = "../../${var.K8S_TPL_VALUE_JSON_FILE}"
             CONTENT = jsonencode("${local.K8S_TPL_VALUE_INPUT}")
         }
     ]
