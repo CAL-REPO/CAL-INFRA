@@ -32,7 +32,7 @@ locals {
         # ]
     }
 
-    LOCAL_CREATE_FILEs =[
+    LOCAL_CREATE_FILEs = [
         {
             ALWAYS = true
             TYPE = "utf-8"
@@ -53,27 +53,6 @@ locals {
             K8S_TPL_J2_FILE="${var.K8S_TPL_J2_FILE}"
             K8S_TPL_VALUE_JSON_FILE="${var.K8S_TPL_VALUE_JSON_FILE}"
             K8S_CONF_YAML_FILE="${var.K8S_CONF_YAML_FILE}"
-            [bastion]
-            ${module.AWS_REG1_ADD.EIP_IP[0]} ansible_user="${var.OPS_USER_NAME}" ansible_ssh_private_key_file="${module.AWS_REG1_KEY.KEY_PRI_RUNNER_FILE[0]}"
-            [bastion:vars]
-            MAIN_DOMAIN="${var.CF_DOMAIN_MAIN}"
-            AWS_PAGER=""
-            AWS_PROFILE="${local.AWS_PROFILEs[0].NAME}"
-            GIT_USER_NAME="${var.OPS_GIT_USER_NAME}"
-            GIT_USER_EMAIL="${var.OPS_GIT_USER_EMAIL}"
-            GIT_LOCAL_DIR="/home/${var.OPS_USER_NAME}/infra"
-            GIT_LOCAL_REMOTE_NAME="CAL-OPS"
-            GIT_REPO_URL="${var.OPS_GIT_REPO_URL}"
-            GIT_REPO_AUTH_URL="${var.OPS_GIT_REPO_AUTH_URL}"
-            GIT_COMMIT_MESSAGE="Commited by infra manager"
-            GIT_BRANCH_NAME="initial"
-            KOPS_DIR="/home/${var.OPS_USER_NAME}/infra/kops"
-            K8S_ORIGIN_CONF_YAML_FILE="${var.K8S_CONF_YAML_FILE}"
-            K8S_CONF_YAML_FILE="/home/${var.OPS_USER_NAME}/infra/kops/${basename(var.K8S_CONF_YAML_FILE)}"
-            K8S_CLUSTER_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
-            KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"
-            KOPS_STATE_S3_DIR="${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
-            KOPS_STATE_S3="s3://${var.AWS_KOPS_STATE_S3_BUCKET}/${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
             EOF
         },
         {
