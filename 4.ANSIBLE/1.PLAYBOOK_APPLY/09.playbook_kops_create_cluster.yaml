@@ -1,5 +1,5 @@
 - name: Create kops cluster
-  gather_facts: false
+  gather_facts: true
   hosts: "{{ host_group }}"
 
   # environment:
@@ -16,8 +16,8 @@
     - name: Check if S3 Bucket kops state directory exists
       shell: |
         aws s3api list-objects --bucket "{{ KOPS_STATE_S3_BUCKET }}" --prefix "{{ KOPS_STATE_S3_DIR }}/" --profile "{{ AWS_PROFILE }}"
-      ignore_errors: yes
       register: s3_object_status
+      ignore_errors: yes
 
     - name: Create S3 Bucket directory for kops state
       shell: |
