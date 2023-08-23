@@ -115,9 +115,9 @@ jobs:
           terraform validate
           terraform plan -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" -out=tfplan
           if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
-            terraform apply tfplan --auto-approve
+            terraform apply tfplan
           else
-            terraform destroy tfplan --auto-approve
+            terraform destroy tfplan
           fi
           
       # - name: Plan and Apply Terraform develop Infrastruture
