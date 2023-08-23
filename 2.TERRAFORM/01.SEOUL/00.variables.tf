@@ -167,6 +167,6 @@ variable "K8S_TPL_VALUE_JSON_FILE" {
     description = "Kubernetes cluster template value json file path to set as ansible variant"
 }
 
-variable "K8S_TPL_CONF_YAML_FILE" {
+variable "K8S_CONF_YAML_FILE" {
     description = "Kubernetes cluster configuration file path to set as ansible variant"
 }
