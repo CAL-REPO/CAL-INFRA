@@ -49,11 +49,10 @@ jobs:
         working-directory: deploy/.github/workflows
         run: |
           if [[ $(cat terraform_mode) == "deploy" ]]; then
-            echo "deploy"
+            echo "DEPLOY_MODE=deploy" >> $GITHUB_ENV  # Set DEPLOY_MODE to "deploy"
           else
-            echo "destroy"
+            echo "DEPLOY_MODE=destroy" >> $GITHUB_ENV  # Set DEPLOY_MODE to "destroy"
           fi
-          
 
       - name: Set aws profile for terraform from secret to file on github action runner
         working-directory: deploy/1.WORKFLOWS_SCRIPT
@@ -115,9 +114,9 @@ jobs:
           terraform validate
           terraform plan -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" -out=tfplan
           if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
-            terraform apply tfplan
+            terraform apply "tfplan"
           else
-            terraform destroy tfplan
+            terraform destroy "tfplan"
           fi
           
       # - name: Plan and Apply Terraform develop Infrastruture
