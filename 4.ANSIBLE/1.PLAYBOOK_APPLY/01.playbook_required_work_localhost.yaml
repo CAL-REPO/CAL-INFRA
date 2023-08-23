@@ -1,0 +1,30 @@
+- name: Do Required Woking for Local
+  gather_facts: false
+  hosts: local
+
+  tasks:
+
+    - name: Install pip
+      apt:
+        name: python3-pip
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Install Pip (for RedHat/CentOS)
+      yum:
+        name: python3-pip
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+    - name: Install Jinja2
+      pip:
+        name: Jinja2
+        executable: pip3
+
+    - name: Create kubernetes cluster configuration file with template
+      shell: |
+        python "{{ K8S_TPL_RENDERER_PY_FILE }}" "{{ K8S_TPL_J2_FILE }}" "{{ K8S_TPL_VALUE_JSON_FILE }}" "{{ K8S_CONF_YAML_FILE }}"
+
+    - name: Check
+      shell: |
+        cat "{{ K8S_CONF_YAML_FILE }}"
