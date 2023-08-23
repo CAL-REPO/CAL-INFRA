@@ -46,9 +46,7 @@ locals {
             TYPE = "utf-8"
             FILENAME = "${var.ANSIBLE_HOSTS_FILE}"
             CONTENT = <<-EOF
-            [local]
-            localhost ansible_connection=local
-            [local:vars]
+            [localhost:vars]
             K8S_TPL_RENDERER_PY_FILE="${var.K8S_TPL_RENDERER_PY_FILE}
             K8S_TPL_J2_FILE="${var.K8S_TPL_J2_FILE}"
             K8S_TPL_VALUE_JSON_FILE="${var.K8S_TPL_VALUE_JSON_FILE}"

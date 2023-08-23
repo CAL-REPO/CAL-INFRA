@@ -1,6 +1,6 @@
 - name: Do Required Woking for Local
   gather_facts: true
-  hosts: local
+  hosts: localhost
 
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
