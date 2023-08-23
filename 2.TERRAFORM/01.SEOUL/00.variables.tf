@@ -147,19 +147,12 @@ variable "OPS_GIT_REPO_AUTH_URL" {
     description = "Git repository auth url for OPS"
 }
 
-variable "WORKFLOWS_SCRIPT_DIR_PATH" {
-    type = string
-    default = "./"
+variable "ANSIBLE_CONF_FILE" {
+    description = "Ansible configuration file path"
 }
 
-variable "ANSIBLE_DIR_PATH" {
-    type = string
-    default = "./"
-}
-
-variable "PLAYBOOK_FILE_NAME" {
-    type = list(string)
-    default = []    
+variable "ANSIBLE_HOSTS_FILE" {
+    description = "Ansible hosts file path"
 }
 
 variable "K8S_FILE_NAME" {

@@ -4,10 +4,10 @@ locals {
         {
             ALWAYS = true
             PRE_COMMAND = <<-EOF
-            cat <<-EOT > "${var.ANSIBLE_DIR_PATH}/0.CONFIG/ansible.cfg"
+            cat <<-EOT > "${var.ANSIBLE_CONF_FILE}"
             [defaults]
             EOT
-            cat <<-EOT > "${var.ANSIBLE_DIR_PATH}/0.CONFIG/hosts"
+            cat <<-EOT > "${var.ANSIBLE_HOSTS_FILE}"
             [bastion]
             ${module.AWS_REG1_ADD.EIP_IP[0]} ansible_user="${var.OPS_USER_NAME}" ansible_ssh_private_key_file="${module.AWS_REG1_KEY.KEY_PRI_RUNNER_FILE[0]}"
             [bastion:vars]
@@ -31,28 +31,28 @@ locals {
         }
     ]
 
-    K8S_TEMPLATE_INPUT = {
-        KOPS_DIR="/home/${var.OPS_USER_NAME}/infra/kops"
-        KOPS_CLUSTER_USER_NAME="${var.SUB_DOMAINs[0]}"
-        KOPS_CLUSTER_VERSION="v1.27.3"
-        KOPS_CLUSTER_CONTAINER_RUNTIME="containerd"
-        KOPS_CLUSTER_CLOUD="aws"
-        KOPS_CLUSTER_API_PUBLIC_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
-        KOPS_CLUSTER_TOPOLOGY="private"
-        KOPS_CLUSTER_NETWORK="calico"
-        KOPS_CLUSTER_NETWORK_ID="${module.AWS_REG1_VPC1.VPC_ID}"
-        KOPS_CLUSTER_LB_TYPE="internal"
-        KOPS_CLUSTER_LB_CLASS="network"
-        KOPS_CLUSTER_ZONES="${local.AWS_REGIONs[0].CODE}a"
-        KOPS_CLUSTER_MASTER_ZONES="${local.AWS_REGIONs[0].CODE}a"
-        KOPS_CLUSTER_MASTER_SIZE="t3.medium"
-        KOPS_CLUSTER_NODE_SIZE="t2.micro"
-        KOPS_CLUSTER_NODE_COUNT=1
-        KOPS_CLUSTER_UTILITY_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
-        KOPS_CLUSTER_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[2]}"
-        KOPS_CLUSTER_BASTION_CIDR="${var.AWS_VPC0_Za_PUB_SN_CIDRs[0]}"
-        KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE="/home/${var.OPS_USER_NAME}/.ssh/authorized_keys"
-    }
+    # K8S_TEMPLATE_INPUT = {
+    #     KOPS_DIR="/home/${var.OPS_USER_NAME}/infra/kops"
+    #     KOPS_CLUSTER_USER_NAME="${var.SUB_DOMAINs[0]}"
+    #     KOPS_CLUSTER_VERSION="v1.27.3"
+    #     KOPS_CLUSTER_CONTAINER_RUNTIME="containerd"
+    #     KOPS_CLUSTER_CLOUD="aws"
+    #     KOPS_CLUSTER_API_PUBLIC_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
+    #     KOPS_CLUSTER_TOPOLOGY="private"
+    #     KOPS_CLUSTER_NETWORK="calico"
+    #     KOPS_CLUSTER_NETWORK_ID="${module.AWS_REG1_VPC1.VPC_ID}"
+    #     KOPS_CLUSTER_LB_TYPE="internal"
+    #     KOPS_CLUSTER_LB_CLASS="network"
+    #     KOPS_CLUSTER_ZONES="${local.AWS_REGIONs[0].CODE}a"
+    #     KOPS_CLUSTER_MASTER_ZONES="${local.AWS_REGIONs[0].CODE}a"
+    #     KOPS_CLUSTER_MASTER_SIZE="t3.medium"
+    #     KOPS_CLUSTER_NODE_SIZE="t2.micro"
+    #     KOPS_CLUSTER_NODE_COUNT=1
+    #     KOPS_CLUSTER_UTILITY_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
+    #     KOPS_CLUSTER_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[2]}"
+    #     KOPS_CLUSTER_BASTION_CIDR="${var.AWS_VPC0_Za_PUB_SN_CIDRs[0]}"
+    #     KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE="/home/${var.OPS_USER_NAME}/.ssh/authorized_keys"
+    # }
 
 }
 
