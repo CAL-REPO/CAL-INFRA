@@ -5,6 +5,7 @@
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
     playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
+    playbook_dir_path: "{{ playbook_file_path | dirname }}"
     playbook_file_name: "{{ playbook_file_path | basename }}"
 
   tasks:
@@ -34,11 +35,14 @@
 
     - name: Create kubernetes cluster configuration file with template
       shell: |
-        python "{{ KOPS_TPL_RENDERER_PY_FILE }}" "{{ KOPS_TPL_J2_FILE }}" "{{ KOPS_TPL_VALUE_JSON_FILE }}" "{{ KOPS_CONF_YAML_FILE }}"
+        python "{{ playbook_dir_path }}/../../{{ KOPS_TPL_RENDERER_PY_FILE }}" \
+              "{{ playbook_dir_path }}/../../{{ KOPS_TPL_J2_FILE }}" \
+              "{{ playbook_dir_path }}/../../{{ KOPS_TPL_VALUE_JSON_FILE }}" \
+              "{{ playbook_dir_path }}/../../{{ KOPS_CONF_YAML_FILE }}"
 
     - name: Read and print the contents of the YAML file
       include_vars:
-        file: "{{ KOPS_CONF_YAML_FILE }}"
+        file: "{{ playbook_dir_path }}/../../{{ KOPS_CONF_YAML_FILE }}"
       register: kOPS_cluster_configuratin_file_contents
 
     - name: Print the contents of the YAML file
