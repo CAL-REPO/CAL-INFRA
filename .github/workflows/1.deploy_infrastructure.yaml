@@ -122,9 +122,9 @@ jobs:
           TF_VAR_K8S_TPL_VALUE_JSON_FILE: "${{ env.INFRA_K8S_TPL_VALUE_JSON_FILE }}"
           TF_VAR_K8S_CONF_YAML_FILE: "${{ env.INFRA_K8S_CONF_YAML_FILE }}"
         run: |
-          terraform validate
-          terraform plan -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" -out=tfplan
           if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
+            terraform validate
+            terraform plan -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" -out=tfplan
             terraform apply tfplan
           else
             terraform destroy -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" --auto-approve
