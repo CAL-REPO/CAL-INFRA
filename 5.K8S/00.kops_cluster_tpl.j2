@@ -10,7 +10,7 @@ spec:
   kubernetesVersion: {{ KOPS_CLUSTER_VERSION }}
   containerRuntime: {{ KOPS_CLUSTER_CONTAINER_RUNTIME }}
   cloudProvider: {{ KOPS_CLUSTER_CLOUD }}
-  authorization:
+  {# authorization:
     rbac: {}
   api:
     loadBalancer:
@@ -100,4 +100,4 @@ spec:
   role: Node
   subnets:
   - ap-northeast-2a-1
-  - ap-northeast-2a-2
+  - ap-northeast-2a-2 #}

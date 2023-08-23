@@ -1,8 +1,12 @@
 locals {
 
-    K8S_TPL_VALUE_INPUT = {
+    KOPS_TPL_VALUE_INPUT = {
 
+        KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"
+        KOPS_STATE_S3_DIR="${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
+        KOPS_STATE_S3="s3://${var.AWS_KOPS_STATE_S3_BUCKET}/${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
         KOPS_CLUSTER_USER_NAME="${var.SUB_DOMAINs[0]}"
+        KOPS_CLUSTER_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
         KOPS_CLUSTER_VERSION="v1.27.3"
         KOPS_CLUSTER_CONTAINER_RUNTIME="containerd"
         KOPS_CLUSTER_CLOUD="aws"
@@ -47,10 +51,10 @@ locals {
             FILENAME = "${var.ANSIBLE_HOSTS_FILE}"
             CONTENT = <<-EOF
             [localhost:vars]
-            K8S_TPL_RENDERER_PY_FILE="${var.K8S_TPL_RENDERER_PY_FILE}
-            K8S_TPL_J2_FILE="${var.K8S_TPL_J2_FILE}"
-            K8S_TPL_VALUE_JSON_FILE="${var.K8S_TPL_VALUE_JSON_FILE}"
-            K8S_CONF_YAML_FILE="${var.K8S_CONF_YAML_FILE}"
+            KOPS_TPL_RENDERER_PY_FILE="${var.KOPS_TPL_RENDERER_PY_FILE}
+            KOPS_TPL_J2_FILE="${var.KOPS_TPL_J2_FILE}"
+            KOPS_TPL_VALUE_JSON_FILE="${var.KOPS_TPL_VALUE_JSON_FILE}"
+            KOPS_CONF_YAML_FILE="${var.KOPS_CONF_YAML_FILE}"
             [bastion]
             ${module.AWS_REG1_ADD.EIP_IP[0]} ansible_user="${var.OPS_USER_NAME}" ansible_ssh_private_key_file="${module.AWS_REG1_KEY.KEY_PRI_RUNNER_FILE[0]}"
             [bastion:vars]
@@ -66,9 +70,9 @@ locals {
             GIT_COMMIT_MESSAGE="Commited by infra manager"
             GIT_BRANCH_NAME="initial"
             KOPS_DIR="/home/${var.OPS_USER_NAME}/infra/kops"
-            K8S_ORIGIN_CONF_YAML_FILE="${var.K8S_CONF_YAML_FILE}"
-            K8S_CONF_YAML_FILE="/home/${var.OPS_USER_NAME}/infra/kops/${basename(var.K8S_CONF_YAML_FILE)}"
-            K8S_CLUSTER_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
+            KOPS_ORIGIN_CONF_YAML_FILE="${var.KOPS_CONF_YAML_FILE}"
+            KOPS_CONF_YAML_FILE="/home/${var.OPS_USER_NAME}/infra/kops/${basename(var.KOPS_CONF_YAML_FILE)}"
+            KOPS_CLUSTER_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
             KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"
             KOPS_STATE_S3_DIR="${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
             KOPS_STATE_S3="s3://${var.AWS_KOPS_STATE_S3_BUCKET}/${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
@@ -77,8 +81,8 @@ locals {
         {
             ALWAYS = true
             TYPE = "json"
-            FILENAME = "../../${var.K8S_TPL_VALUE_JSON_FILE}"
-            CONTENT = jsonencode("${local.K8S_TPL_VALUE_INPUT}")
+            FILENAME = "../../${var.KOPS_TPL_VALUE_JSON_FILE}"
+            CONTENT = jsonencode("${local.KOPS_TPL_VALUE_INPUT}")
         }
     ]
 }

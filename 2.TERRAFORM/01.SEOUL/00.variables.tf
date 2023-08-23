@@ -155,18 +155,18 @@ variable "ANSIBLE_HOSTS_FILE" {
     description = "Ansible hosts file path"
 }
 
-variable "K8S_TPL_RENDERER_PY_FILE" {
+variable "KOPS_TPL_RENDERER_PY_FILE" {
     description = "Python script path to render from kubenetes cluster template j2 file to kubernetes cluster configuration yaml file"
 }
 
-variable "K8S_TPL_J2_FILE" {
+variable "KOPS_TPL_J2_FILE" {
     description = "Kubernetes cluster template j2 file path to set as ansible variant"
 }
 
-variable "K8S_TPL_VALUE_JSON_FILE" {
+variable "KOPS_TPL_VALUE_JSON_FILE" {
     description = "Kubernetes cluster template value json file path to set as ansible variant"
 }
 
-variable "K8S_CONF_YAML_FILE" {
+variable "KOPS_CONF_YAML_FILE" {
     description = "Kubernetes cluster configuration file path to set as ansible variant"
 }
