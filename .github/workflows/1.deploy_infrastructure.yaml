@@ -33,6 +33,8 @@ jobs:
       INFRA_TF_WORKSPACE_NAME_DEV: "dev"
       INFRA_TF_WORKSPACE_NAME_PROD: "prod"
       INFRA_TF_VAR_FILE_NAME_DEV: "./ENV/dev.tfvars"
+      INFRA_ANSIBLE_CONF: 4.ANSIBLE/0.CONFIG/ansible.cfg
+      INFRA_ANSIBLE_HOSTS: 4.ANSIBLE/0.CONFIG/hosts
       CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL_MAIN_1 }}
       CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY_MAIN_1 }}
       CLOUDFLARE_DOMAIN: ${{ secrets.CLOUDFLARE_DOMAIN_MAIN_1 }}
@@ -109,6 +111,8 @@ jobs:
           TF_VAR_OPS_GIT_USER_EMAIL: ${{ env.OPS_GIT_USER_EMAIL }}  
           TF_VAR_OPS_GIT_REPO_URL: "https://github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
           TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
+          TF_VAR_ANSIBLE_CONF_FILE: "../../${{ env.INFRA_ANSIBLE_CONF }}"
+          TF_VAR_ANSIBLE_HOSTS_FILE: "../../${{ env.INFRA_ANSIBLE_HOSTS }}"
         run: |
           terraform validate
           terraform plan -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" -out=tfplan
@@ -121,8 +125,8 @@ jobs:
       - name: Execute Ansible for Bastion Host
         working-directory: deploy
         run: |
-          export CONFIG_FILE_PATH="4.ANSIBLE/0.CONFIG/ansible.cfg"
-          export INVENTORY_FILE_PATH="4.ANSIBLE/0.CONFIG/hosts"
+          export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
+          export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
           export HOST_GROUP="bastion"
           ls -al $INVENTORY_FILE_PATH
           # if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
