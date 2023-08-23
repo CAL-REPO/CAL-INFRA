@@ -127,7 +127,7 @@ jobs:
           if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
             terraform apply tfplan
           else
-            terraform destroy tfplan
+            terraform destroy --auto-approve
           fi
 
       - name: Execute Ansible for Bastion Host
