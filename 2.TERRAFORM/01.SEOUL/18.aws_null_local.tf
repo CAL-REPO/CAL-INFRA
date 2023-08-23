@@ -21,7 +21,7 @@ locals {
         KOPS_CLUSTER_SUBNETS="${module.AWS_REG1_VPC1.Za_SNs_ID[2]},${module.AWS_REG1_VPC1.Za_SNs_ID[3]}"
         KOPS_CLUSTER_BASTION_CIDR="${var.AWS_VPC0_Za_PUB_SN_CIDRs[0]}"
         KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE="/home/${var.OPS_USER_NAME}/.ssh/authorized_keys"
-        
+        ##
         # IG = [
         #     {
         #         image
