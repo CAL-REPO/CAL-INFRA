@@ -17,10 +17,18 @@ class TemplateRenderer:
             output_file.write(rendered_config)
 
 if __name__ == "__main__":
-    template_renderer = TemplateRenderer("template.j2")
+    if len(sys.argv) != 4:
+        print("Usage: python script.py <template_path> <input_json> <output_path>")
+        sys.exit(1)
 
-    # Read JSON input from Terraform
-    input_data = json.loads(sys.stdin.read())
-    
+    template_path = sys.argv[1]
+    input_json_path = sys.argv[2]
+    output_path = sys.argv[3]
+
+    template_renderer = TemplateRenderer(template_path)
+
+    with open(input_json_path, "r") as input_file:
+        input_data = json.load(input_file)
+
     rendered_config = template_renderer.render_template(input_data)
-    template_renderer.write_rendered_config(rendered_config, "cluster-configuration.yaml")
+    template_renderer.write_rendered_config(rendered_config, output_path)
