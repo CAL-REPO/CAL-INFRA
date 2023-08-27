@@ -1,4 +1,4 @@
-- name: Do Required Woking for Host
+- name: Send kubernetis cluster configuration file
   gather_facts: false
   hosts: "{{ host_group }}"
 

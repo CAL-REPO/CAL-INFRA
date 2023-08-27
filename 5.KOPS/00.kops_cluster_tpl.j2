@@ -100,4 +100,4 @@ metadata:
     kops.k8s.io/cluster: {{ KOPS_CLUSTER_NAME }}
     name: admin
 spec:
-  publicKey:"{{ lookup('file', KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE) }}"
+  publicKey: {{ KOPS_CLUSTER_SSH_PUBLIC_KEY }}

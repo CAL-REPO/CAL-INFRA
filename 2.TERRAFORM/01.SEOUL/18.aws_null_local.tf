@@ -17,7 +17,7 @@ locals {
         KOPS_CLUSTER_LB_TYPE="internal"
         KOPS_CLUSTER_LB_CLASS="network"
         KOPS_CLUSTER_BASTION_CIDR="${var.AWS_VPC0_Za_PUB_SN_CIDRs[0]}"
-        KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE="/home/${var.OPS_USER_NAME}/.ssh/authorized_keys"
+        KOPS_CLUSTER_SSH_PUBLIC_KEY ="${module.AWS_REG1_KEY.PUB_KEY[0]}"
         KOPS_CLUSTER_SUBNETS=[
             {
                 cidr="${var.AWS_VPC0_Za_PUB_SN_CIDRs[1]}"
