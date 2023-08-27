@@ -8,11 +8,6 @@
       KOPS_CLUSTER_NAME: "{{ KOPS_CLUSTER_NAME }}"
       KOPS_STATE_STORE: "{{ KOPS_STATE_S3 }}"
 
-  # vars:
-  #   ansible_python_interpreter: "/usr/bin/python3"
-  #   playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
-  #   playbook_file_name: "{{ playbook_file_path | basename }}"
-
   tasks:
 
     - name: Check if S3 Bucket kops state directory exists

@@ -1,0 +1,26 @@
+- name: Create kops cluster
+  gather_facts: true
+  hosts: "{{ host_group }}"
+
+  environment:
+      AWS_PAGER: ""
+      AWS_PROFILE: "{{ AWS_PROFILE }}"  # Set your desired AWS profile here
+      KOPS_CLUSTER_NAME: "{{ KOPS_CLUSTER_NAME }}"
+      KOPS_STATE_STORE: "{{ KOPS_STATE_S3 }}"
+
+  tasks:
+
+    - name: Create ingress-nginx namespace
+      k8s:
+        definition: "{{ lookup('file', '{{ ansible_dir }}/../../5.KOPS/03.kops_cluster_namespace.yaml') }}"
+      register: namespace_result
+
+    - name: Install Ingress Controller
+      helm:
+        name: my-ingress-controller
+        chart_ref: ingress-nginx/ingress-nginx
+        release_namespace: ingress-nginx
+        values_files:
+          - "{{ ansible_dir }}/../../5.KOPS/04.helm-aws-alb-ingress-controller-value.yaml"
+        state: present
+      when: namespace_result|success
