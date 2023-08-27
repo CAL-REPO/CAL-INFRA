@@ -168,5 +168,16 @@ locals {
                 local.SG_ICMP_ALL
             ]
         }
+        ,{
+            NAME = "${var.PRJ_NAME}-LB-INGRESS-CONTROLLER"
+            INGRESS = [
+                local.SG_HTTP_ALL,
+                local.SG_HTTPS_ALL
+            ]
+            EGRESS = [
+                local.SG_HTTP_ALL,
+                local.SG_HTTPS_ALL
+            ]
+        }
     ]
 }
