@@ -89,6 +89,13 @@
     #     -oyaml > {{ KOPS_DIR }}/{{ KOPS_CLUSTER_NAME }}.yaml
     #   when: not cluster_exists|default(false)
 
+    - name: Create kubernetes cluster configuration file with template
+      shell: |
+        python3 "{{ KOPS_DIR }}/{{ KOPS_TPL_RENDERER_PY_FILE_NAME }}" \
+                "{{ KOPS_DIR }}/{{ KOPS_TPL_J2_FILE_NAME }}" \
+                "{{ KOPS_DIR }}/{{ KOPS_TPL_VALUE_JSON_FILE_NAME }}" \
+                "{{ KOPS_DIR }}/{{ KOPS_CONF_YAML_FILE_NAME }}"
+
     - name: Create kubernetes cluster configuration file to s3 bucket
       shell: |
         kops create -f {{ KOPS_CONF_YAML_FILE }} --state {{ KOPS_STATE_S3 }}

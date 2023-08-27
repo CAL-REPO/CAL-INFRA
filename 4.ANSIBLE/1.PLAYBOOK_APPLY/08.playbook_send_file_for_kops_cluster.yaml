@@ -1,0 +1,33 @@
+- name: Send kubernetis cluster configuration file
+  gather_facts: false
+  hosts: "{{ host_group }}"
+
+  tasks:
+    - name: Create kops directory
+      file:
+        path: /home/{{ ansible_user }}/infra/kops
+        state: directory
+
+    - name: Copy kubernetes cluster configuration file renderer to remote hosts
+      copy:
+        src: "{{ KOPS_TPL_RENDERER_PY_FILE }}"
+        dest: "{{ KOPS_DIR }}/{{ KOPS_TPL_RENDERER_PY_FILE_NAME }}"
+        owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
+        group: "{{ ansible_user }}"  # Optional: Set the group of the file
+        mode: 0644  # Optional: Set the permissions of the file
+
+    - name: Copy kubernetes cluster configuration file renderer to remote hosts
+      copy:
+        src: "{{ KOPS_TPL_J2_FILE }}"
+        dest: "{{ KOPS_DIR }}/{{ KOPS_TPL_J2_FILE_NAME }}"
+        owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
+        group: "{{ ansible_user }}"  # Optional: Set the group of the file
+        mode: 0644  # Optional: Set the permissions of the file
+
+    - name: Copy kubernetes cluster configuration file renderer to remote hosts
+      copy:
+        src: "{{ KOPS_TPL_VALUE_JSON_FILE }}"
+        dest: "{{ KOPS_DIR }}/{{ KOPS_TPL_VALUE_JSON_FILE_NAME }}"
+        owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
+        group: "{{ ansible_user }}"  # Optional: Set the group of the file
+        mode: 0644  # Optional: Set the permissions of the file

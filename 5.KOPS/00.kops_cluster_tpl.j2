@@ -6,8 +6,8 @@ metadata:
 spec:
   api:
     loadBalancer:
-      class: {{ KOPS_CLUSTER_LB_TYPE }}
-      type: {{ KOPS_CLUSTER_LB_CLASS }}
+      class: {{ KOPS_CLUSTER_LB_CLASS }}
+      type: {{ KOPS_CLUSTER_LB_TYPE }}
   authorization:
     rbac: {}
   channel: stable
@@ -28,6 +28,7 @@ spec:
   {%- endfor %}
   {%- for ETCD in KOPS_CLUSTER_ETCD %}
   - cpuRequest: 100m
+    etcdMembers:
     - encryptedVolume: true
       instanceGroup: {{ ETCD.instanceGroup}}
       name: {{ ETCD.name}}

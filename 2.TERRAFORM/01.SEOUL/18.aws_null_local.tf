@@ -14,8 +14,8 @@ locals {
         KOPS_CLUSTER_NODE_TOPOLOGY="private"
         KOPS_CLUSTER_NETWORK_ID="${module.AWS_REG1_VPC1.VPC_ID}"
         KOPS_CLUSTER_NETWORK_CIDR=""
-        KOPS_CLUSTER_LB_TYPE="internal"
-        KOPS_CLUSTER_LB_CLASS="network"
+        KOPS_CLUSTER_LB_TYPE="Internal"
+        KOPS_CLUSTER_LB_CLASS="Network"
         KOPS_CLUSTER_BASTION_CIDR="${var.AWS_VPC0_Za_PUB_SN_CIDRs[0]}"
         KOPS_CLUSTER_SSH_PUBLIC_KEY ="${module.AWS_REG1_KEY.PUB_KEY[0]}"
         KOPS_CLUSTER_SUBNETS=[
@@ -62,7 +62,7 @@ locals {
                 machineType="t3.medium"
                 maxSize="1"
                 minSize="1"
-                role="master"
+                role="Master"
                 subnets=["MASTER-${local.AWS_REG1_VPC1.Za_SNs_NAME[2]}"]
             },
             {
@@ -71,7 +71,7 @@ locals {
                 machineType="t2.micro"
                 maxSize="1"
                 minSize="1"
-                role="node"
+                role="Node"
                 subnets=["NODE-${local.AWS_REG1_VPC1.Za_SNs_NAME[3]}"]
             },
             {
@@ -80,7 +80,7 @@ locals {
                 machineType="t2.micro"
                 maxSize="1"
                 minSize="1"
-                role="node"
+                role="Node"
                 subnets=["NODE-${local.AWS_REG1_VPC1.Za_SNs_NAME[4]}"]
             }
         ]
@@ -103,10 +103,7 @@ locals {
             [local]
             localhost ansible_connection=local ansible_user=runner
             [local:vars]
-            KOPS_TPL_RENDERER_PY_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_RENDERER_PY_FILE}"
-            KOPS_TPL_J2_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_J2_FILE}"
-            KOPS_TPL_VALUE_JSON_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_VALUE_JSON_FILE}"
-            KOPS_CONF_YAML_FILE="{{ playbook_dir }}/../../${var.KOPS_CONF_YAML_FILE}"
+
             [bastion]
             ${module.AWS_REG1_ADD.EIP_IP[0]} ansible_user="${var.OPS_USER_NAME}" ansible_ssh_private_key_file="${module.AWS_REG1_KEY.KEY_PRI_RUNNER_FILE[0]}"
             [bastion:vars]
@@ -121,17 +118,19 @@ locals {
             GIT_REPO_AUTH_URL="${var.OPS_GIT_REPO_AUTH_URL}"
             GIT_COMMIT_MESSAGE="Commited by infra manager"
             GIT_BRANCH_NAME="initial"
-            KOPS_DIR="/home/${var.OPS_USER_NAME}/infra/kops"
-            KOPS_ORIGIN_CONF_YAML_FILE="{{ playbook_dir }}/../../${var.KOPS_CONF_YAML_FILE}"
-            KOPS_CONF_YAML_FILE="/home/${var.OPS_USER_NAME}/infra/kops/${basename(var.KOPS_CONF_YAML_FILE)}"
-            KOPS_CLUSTER_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
-            KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"
-            KOPS_STATE_S3_DIR="${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
-            KOPS_STATE_S3="s3://${var.AWS_KOPS_STATE_S3_BUCKET}/${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
             KOPS_TPL_RENDERER_PY_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_RENDERER_PY_FILE}"
             KOPS_TPL_J2_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_J2_FILE}"
             KOPS_TPL_VALUE_JSON_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_VALUE_JSON_FILE}"
             KOPS_CONF_YAML_FILE="{{ playbook_dir }}/../../${var.KOPS_CONF_YAML_FILE}"
+            KOPS_TPL_RENDERER_PY_FILE_NAME=${basename(var.KOPS_TPL_RENDERER_PY_FILE)}
+            KOPS_TPL_J2_FILE_NAME=${basename(var.KOPS_TPL_J2_FILE)}
+            KOPS_TPL_VALUE_JSON_FILE_NAME=${basename(var.KOPS_TPL_VALUE_JSON_FILE)}
+            KOPS_CONF_YAML_FILE_NAME=${basename(var.KOPS_CONF_YAML_FILE)}
+            KOPS_DIR="/home/${var.OPS_USER_NAME}/infra/kops"
+            KOPS_CLUSTER_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
+            KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"
+            KOPS_STATE_S3_DIR="${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
+            KOPS_STATE_S3="s3://${var.AWS_KOPS_STATE_S3_BUCKET}/${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
             EOF
         },
         {
