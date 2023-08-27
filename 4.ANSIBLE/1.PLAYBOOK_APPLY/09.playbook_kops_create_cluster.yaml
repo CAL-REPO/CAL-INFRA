@@ -102,7 +102,7 @@
 
     - name: Create kubernetes cluster configuration file to s3 bucket
       shell: |
-        kops create -f {{ KOPS_CONF_YAML_FILE }} --state {{ KOPS_STATE_S3 }}
+        kops create -f {{ KOPS_DIR }}/{{ KOPS_CONF_YAML_FILE_NAME }} --state {{ KOPS_STATE_S3 }}
       when: not cluster_exists|default(false)
 
     - name: Create kubernetes cluster
