@@ -1,4 +1,4 @@
-- name: Send AWS configuration file
+- name: Send file for test
   gather_facts: false
   hosts: "{{ host_group }}"
 
