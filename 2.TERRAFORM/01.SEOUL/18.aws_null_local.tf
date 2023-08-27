@@ -128,6 +128,10 @@ locals {
             KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"
             KOPS_STATE_S3_DIR="${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
             KOPS_STATE_S3="s3://${var.AWS_KOPS_STATE_S3_BUCKET}/${var.AWS_KOPS_STATE_S3_BUCKET_DIR}"
+            KOPS_TPL_RENDERER_PY_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_RENDERER_PY_FILE}"
+            KOPS_TPL_J2_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_J2_FILE}"
+            KOPS_TPL_VALUE_JSON_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_VALUE_JSON_FILE}"
+            KOPS_CONF_YAML_FILE="{{ playbook_dir }}/../../${var.KOPS_CONF_YAML_FILE}"
             EOF
         },
         {
