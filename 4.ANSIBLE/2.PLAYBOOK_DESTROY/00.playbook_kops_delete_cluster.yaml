@@ -37,3 +37,4 @@
       shell: |
         kops delete cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }} --yes
       when: cluster_exists|default(false)
+      #
