@@ -1,0 +1,9 @@
+- name: Create kops cluster
+  gather_facts: false
+  hosts: "{{ host_group }}"
+
+  tasks:
+
+    - name: Get kubernetes cluster information
+      shell: |
+        kubectl cluster-info

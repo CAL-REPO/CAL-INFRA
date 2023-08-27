@@ -42,7 +42,9 @@ jobs:
       CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL_MAIN_1 }}
       CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY_MAIN_1 }}
       CLOUDFLARE_DOMAIN: ${{ secrets.CLOUDFLARE_DOMAIN_MAIN_1 }}
-    
+      PROCESS_DEPLOY: create
+      PROCESS_DESTROY: destroy
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -54,10 +56,10 @@ jobs:
         id: determine_mode
         working-directory: deploy/.github/workflows
         run: |
-          if [[ $(cat terraform_mode) == "deploy" ]]; then
-            echo "DEPLOY_MODE=deploy" >> $GITHUB_ENV  # Set DEPLOY_MODE to "deploy"
+          if [[ $(cat terraform_mode) == ${{ PROCESS_DEPLOY }} ]]; then
+            echo "DEPLOY_MODE=${{ PROCESS_DEPLOY }}" >> $GITHUB_ENV  # Set DEPLOY_MODE to "create"
           else
-            echo "DEPLOY_MODE=destroy" >> $GITHUB_ENV  # Set DEPLOY_MODE to "destroy"
+            echo "DEPLOY_MODE=${{ PROCESS_DESTROY }}" >> $GITHUB_ENV  # Set DEPLOY_MODE to "destroy"
           fi
 
       - name: Set aws profile for terraform from secret to file on github action runner
@@ -65,7 +67,9 @@ jobs:
         env:
           AWS_IAM_KEY_CSV_DATA: ${{ secrets.CAL_SC_CSV_AWS_PROFILE_ENCODED }}
         run: |
-          bash "set_aws_profile_with_csv_data_to_local.sh"
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ PROCESS_DEPLOY }}" ]]; then
+            bash "set_aws_profile_with_csv_data_to_local.sh"
+          fi
 
       - name: Make s3 bucket for terraform backend
         working-directory: deploy/1.WORKFLOWS_SCRIPT
@@ -75,7 +79,9 @@ jobs:
           AWS_REGION: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}
           S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
         run: |
-          bash "make_s3_bucket.sh"
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ PROCESS_DEPLOY }}" ]]; then
+            bash "make_s3_bucket.sh"
+          fi
 
       - name: Set up terraform version
         uses: hashicorp/setup-terraform@v2
@@ -102,6 +108,17 @@ jobs:
         working-directory: deploy/2.TERRAFORM/01.SEOUL
         run: |
           terraform workspace select ${{ env.INFRA_TF_WORKSPACE_NAME_DEV }}
+
+      - name: Execute ansible for delete kubernetes cluster
+        working-directory: deploy
+        run: |
+          export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
+          export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
+          export HOST_GROUP="bastion"
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ PROCESS_DESTROY }}" ]]; then
+            export PLAYBOOK_DIR="4.ANSIBLE/2.PLAYBOOK_DESTROY"
+            bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
+          fi
 
       - name: Apply or Destroy Terraform develop Infrastruture
         working-directory: deploy/2.TERRAFORM/01.SEOUL
@@ -130,30 +147,25 @@ jobs:
             terraform destroy -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" --auto-approve
           fi
 
-      - name: Execute Ansible for Bastion Host
+      - name: Execute ansible to create kubernetes cluster
         working-directory: deploy
         run: |
           export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
           export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
           export HOST_GROUP="bastion"
-          if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ PROCESS_DEPLOY }}" ]]; then
             export PLAYBOOK_DIR="4.ANSIBLE/1.PLAYBOOK_APPLY"
             bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
-          else
-            echo "test"
-            # export PLAYBOOK_DIR="4.ANSIBLE/2.PLAYBOOK_DESTROY"
-            # bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           fi
 
-      # - name: Make s3 bucket for terraform backend
-      #   working-directory: deploy/1.WORKFLOWS_SCRIPT
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.INFRA_TF_BACKEND_S3_ACCESS_KEY }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}
-      #     AWS_REGION: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}
-      #     S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
-      #   run: |
-      #     if [[ "${{ env.DEPLOY_MODE }}" != "deploy" ]]; then
-      #       bash "remove_s3_bucket.sh"
-      #     fi
-          
+      - name: Make s3 bucket for terraform backend
+        working-directory: deploy/1.WORKFLOWS_SCRIPT
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.INFRA_TF_BACKEND_S3_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.INFRA_TF_BACKEND_S3_SECRET_KEY }}
+          AWS_REGION: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}
+          S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
+        run: |
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ PROCESS_DESTROY }}" ]]; then
+            bash "remove_s3_bucket.sh"
+          fi
