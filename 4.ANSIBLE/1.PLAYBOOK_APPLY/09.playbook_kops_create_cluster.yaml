@@ -17,14 +17,18 @@
       shell: |
         output=$(aws s3api list-objects --bucket "{{ KOPS_STATE_S3_BUCKET }}" --prefix "{{ KOPS_STATE_S3_DIR }}" --profile "{{ AWS_PROFILE }}")
         request_charged=$(echo "$output" | jq -r '.RequestCharged')
-        echo "$request_charged"
+        if [ "$request_charged" == "null" ]; then
+          echo "not_null"
+        else
+          echo "null"
+        fi
       ignore_errors: yes
       register: s3_object_status
   
     - name: Create S3 Bucket directory for kops state
       shell: |
         aws s3api put-object --bucket "{{ KOPS_STATE_S3_BUCKET }}" --key "{{ KOPS_STATE_S3_DIR }}/" --profile "{{ AWS_PROFILE }}"
-      when: s3_object_status.rc != 0 or s3_object_status.rc == "null"
+      when: s3_object_status.rc != 0 or s3_object_status.stdout == "not_null"
 
     - name: Add export statement for AWS_PAGER to ~/.bashrc
       lineinfile:
