@@ -2,9 +2,11 @@
   gather_facts: true
   hosts: "{{ host_group }}"
 
-  # environment:
-  #     AWS_PAGER: ""
-  #     AWS_PROFILE: "{{ AWS_PROFILE }}"  # Set your desired AWS profile here
+  environment:
+      AWS_PAGER: ""
+      AWS_PROFILE: "{{ AWS_PROFILE }}"  # Set your desired AWS profile here
+      KOPS_CLUSTER_NAME: "{{ KOPS_CLUSTER_NAME }}"
+      KOPS_STATE_STORE: "{{ KOPS_STATE_S3 }}"
 
   # vars:
   #   ansible_python_interpreter: "/usr/bin/python3"
@@ -15,7 +17,7 @@
 
     - name: Check if S3 Bucket kops state directory exists
       shell: |
-        output=$(aws s3api list-objects --bucket "{{ KOPS_STATE_S3_BUCKET }}" --prefix "{{ KOPS_STATE_S3_DIR }}" --profile "{{ AWS_PROFILE }}")
+        output=$(aws s3api list-objects --bucket "{{ KOPS_STATE_S3_BUCKET }}" --prefix "{{ KOPS_STATE_S3_DIR }}")
         request_charged=$(echo "$output" | jq -r '.RequestCharged')
         if [ "$request_charged" == "null" ]; then
           echo "not_null"
@@ -27,7 +29,7 @@
   
     - name: Create S3 Bucket directory for kops state
       shell: |
-        aws s3api put-object --bucket "{{ KOPS_STATE_S3_BUCKET }}" --key "{{ KOPS_STATE_S3_DIR }}/" --profile "{{ AWS_PROFILE }}"
+        aws s3api put-object --bucket "{{ KOPS_STATE_S3_BUCKET }}" --key "{{ KOPS_STATE_S3_DIR }}/"
       when: s3_object_status.rc != 0 or s3_object_status.stdout == "not_null"
 
     - name: Add export statement for AWS_PAGER to ~/.bashrc
@@ -102,28 +104,28 @@
 
     - name: Create kubernetes cluster configuration file to s3 bucket
       shell: |
-        kops create -f {{ KOPS_DIR }}/{{ KOPS_CONF_YAML_FILE_NAME }} --state {{ KOPS_STATE_S3 }}
+        kops create -f {{ KOPS_DIR }}/{{ KOPS_CONF_YAML_FILE_NAME }}
       when: not cluster_exists|default(false)
 
     - name: Create kubernetes cluster
       shell: |
-        kops update cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }} --yes
+        kops update cluster --yes
       when: not cluster_exists|default(false)
 
     - name: Set kubernetes admin
       shell: |
-        kops export kubeconfig --admin --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }}
+        kops export kubeconfig --admin
       when: not cluster_exists|default(false)
 
     - name: Update kubernetes cluster
       shell: |
-        kops rolling-update cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }} --yes
-        kops rolling-update cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }} --target {{ KOPS_CONF_YAML_FILE }} --yes --cloudonly
+        kops rolling-update cluster --yes
+        kops rolling-update cluster --target {{ KOPS_CONF_YAML_FILE }} --yes --cloudonly
       when: cluster_exists|default(false)
 
     - name: Validate kubernetes cluster
       shell: |
-        kops validate cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }}
+        kops validate cluster
       register: validate_result
       until: validate_result.rc == 0  # Exit loop if return code is 0 (success)
       retries: 30  # Retry 15 times (up to 15 minutes)
