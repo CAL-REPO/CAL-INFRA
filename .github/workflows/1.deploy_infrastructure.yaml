@@ -56,10 +56,10 @@ jobs:
         id: determine_mode
         working-directory: deploy/.github/workflows
         run: |
-          if [[ $(cat terraform_mode) == ${{ PROCESS_DEPLOY }} ]]; then
-            echo "DEPLOY_MODE=${{ PROCESS_DEPLOY }}" >> $GITHUB_ENV  # Set DEPLOY_MODE to "create"
+          if [[ $(cat terraform_mode) == ${{ env.PROCESS_DEPLOY }} ]]; then
+            echo "DEPLOY_MODE=${{ env.PROCESS_DEPLOY }}" >> $GITHUB_ENV  # Set DEPLOY_MODE to "create"
           else
-            echo "DEPLOY_MODE=${{ PROCESS_DESTROY }}" >> $GITHUB_ENV  # Set DEPLOY_MODE to "destroy"
+            echo "DEPLOY_MODE=${{ env.PROCESS_DESTROY }}" >> $GITHUB_ENV  # Set DEPLOY_MODE to "destroy"
           fi
 
       - name: Set aws profile for terraform from secret to file on github action runner
@@ -67,7 +67,7 @@ jobs:
         env:
           AWS_IAM_KEY_CSV_DATA: ${{ secrets.CAL_SC_CSV_AWS_PROFILE_ENCODED }}
         run: |
-          if [[ "${{ env.DEPLOY_MODE }}" == "${{ PROCESS_DEPLOY }}" ]]; then
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ env.PROCESS_DEPLOY }}" ]]; then
             bash "set_aws_profile_with_csv_data_to_local.sh"
           fi
 
@@ -79,7 +79,7 @@ jobs:
           AWS_REGION: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}
           S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
         run: |
-          if [[ "${{ env.DEPLOY_MODE }}" == "${{ PROCESS_DEPLOY }}" ]]; then
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ env.PROCESS_DEPLOY }}" ]]; then
             bash "make_s3_bucket.sh"
           fi
 
@@ -115,7 +115,7 @@ jobs:
           export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
           export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
           export HOST_GROUP="bastion"
-          if [[ "${{ env.DEPLOY_MODE }}" == "${{ PROCESS_DESTROY }}" ]]; then
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ env.PROCESS_DESTROY }}" ]]; then
             export PLAYBOOK_DIR="4.ANSIBLE/2.PLAYBOOK_DESTROY"
             bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           fi
@@ -153,7 +153,7 @@ jobs:
           export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
           export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
           export HOST_GROUP="bastion"
-          if [[ "${{ env.DEPLOY_MODE }}" == "${{ PROCESS_DEPLOY }}" ]]; then
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ env.PROCESS_DEPLOY }}" ]]; then
             export PLAYBOOK_DIR="4.ANSIBLE/1.PLAYBOOK_APPLY"
             bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           fi
@@ -166,6 +166,6 @@ jobs:
           AWS_REGION: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_REGION }}
           S3_BUCKET_NAME: ${{ env.INFRA_TF_BACKEND_S3_BUCKET_NAME }}
         run: |
-          if [[ "${{ env.DEPLOY_MODE }}" == "${{ PROCESS_DESTROY }}" ]]; then
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ env.PROCESS_DESTROY }}" ]]; then
             bash "remove_s3_bucket.sh"
           fi
