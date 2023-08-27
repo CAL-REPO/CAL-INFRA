@@ -1,0 +1,34 @@
+- name: Send AWS configuration file
+  gather_facts: false
+  hosts: "{{ host_group }}"
+
+  tasks:
+
+    - name: Create AWS configuration directory
+      file:
+        path: /home/ops/kops
+        state: directory
+
+    - name: Copy AWS configuration file to remote hosts
+      copy:
+        src: "{{ KOPS_TPL_RENDERER_PY_FILE }}"
+        dest: /home/ops/kops/renderer.py
+        owner: "ops"  # Optional: Set the owner of the file
+        group: "ops"  # Optional: Set the group of the file
+        mode: 0644  # Optional: Set the permissions of the file
+
+    - name: Copy AWS credential file to remote hosts
+      copy:
+        src: "{{ KOPS_TPL_VALUE_JSON_FILE }}"
+        dest: /home/ops/kops/j2value.py
+        owner: "ops"  # Optional: Set the owner of the file
+        group: "ops"  # Optional: Set the group of the file
+        mode: 0644  # Optional: Set the permissions of the file
+
+    - name: Copy AWS credential file to remote hosts
+      copy:
+        src: "{{ KOPS_TPL_J2_FILE }}"
+        dest: /home/ops/kops/j2tpl.j2
+        owner: "ops"  # Optional: Set the owner of the file
+        group: "ops"  # Optional: Set the group of the file
+        mode: 0644  # Optional: Set the permissions of the file
