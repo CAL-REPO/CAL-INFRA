@@ -139,7 +139,7 @@ jobs:
           TF_VAR_KOPS_TPL_VALUE_JSON_FILE: "${{ env.INFRA_KOPS_TPL_VALUE_JSON_FILE }}"
           TF_VAR_KOPS_CONF_YAML_FILE: "${{ env.INFRA_KOPS_CONF_YAML_FILE }}"
         run: |
-          if [[ "${{ env.DEPLOY_MODE }}" == "deploy" ]]; then
+          if [[ "${{ env.DEPLOY_MODE }}" == "${{ env.PROCESS_DEPLOY }}" ]]; then
             terraform validate
             terraform plan -var-file="${{ env.INFRA_TF_VAR_FILE_NAME_DEV }}" -out=tfplan
             terraform apply tfplan
