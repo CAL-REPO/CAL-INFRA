@@ -26,9 +26,6 @@
         kops delete cluster --yes
       when: cluster_exists|default(false)
 
-      vars:
-        hosted_zone_id: your_hosted_zone_id
-
     - name: Get existing A and AAAA records
       community.aws.route53_info:
         aws_profile: "{{ AWS_PROFILE }}"
