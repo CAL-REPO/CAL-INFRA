@@ -43,7 +43,7 @@ jobs:
       CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY_MAIN_1 }}
       CLOUDFLARE_DOMAIN: ${{ secrets.CLOUDFLARE_DOMAIN_MAIN_1 }}
       PROCESS_DEPLOY: create
-      PROCESS_DESTROY: destroy
+      PROCESS_DESTROY: delete
 
     steps:
       - name: Checkout repository
