@@ -67,9 +67,8 @@ jobs:
         env:
           AWS_IAM_KEY_CSV_DATA: ${{ secrets.CAL_SC_CSV_AWS_PROFILE_ENCODED }}
         run: |
-          if [[ "${{ env.DEPLOY_MODE }}" == "${{ env.PROCESS_DEPLOY }}" ]]; then
-            bash "set_aws_profile_with_csv_data_to_local.sh"
-          fi
+          bash "set_aws_profile_with_csv_data_to_local.sh"
+
 
       - name: Make s3 bucket for terraform backend
         working-directory: deploy/1.WORKFLOWS_SCRIPT
