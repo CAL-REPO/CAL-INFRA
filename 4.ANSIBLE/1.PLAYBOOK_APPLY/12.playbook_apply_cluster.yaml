@@ -10,6 +10,14 @@
 
   tasks:
 
+    - name: Install Kubernetes Collection
+      shell: |
+        pip install kubernetes
+
+    - name: Install Helm Collection
+      shell: |
+        ansible-galaxy collection install community.kubernetes
+
     - name: Create ingress-nginx namespace
       k8s:
         definition: "{{ lookup('file', '{{ ansible_dir }}/../../5.KOPS/03.kops_cluster_namespace.yaml') }}"

@@ -103,13 +103,14 @@ locals {
             [local]
             localhost ansible_connection=local ansible_user=runner
             [local:vars]
-
+            
             [bastion]
             ${module.AWS_REG1_ADD.EIP_IP[0]} ansible_user="${var.OPS_USER_NAME}" ansible_ssh_private_key_file="${module.AWS_REG1_KEY.KEY_PRI_RUNNER_FILE[0]}"
             [bastion:vars]
             MAIN_DOMAIN="${var.CF_DOMAIN_MAIN}"
             AWS_PAGER=""
             AWS_PROFILE="${local.AWS_PROFILEs[0].NAME}"
+            AWS_RT53_ZONE_ID = "${module.AWS_GLOBAL_SERVICE.RT53_ZONE_ID[0]}
             GIT_USER_NAME="${var.OPS_GIT_USER_NAME}"
             GIT_USER_EMAIL="${var.OPS_GIT_USER_EMAIL}"
             GIT_LOCAL_DIR="/home/${var.OPS_USER_NAME}/infra"

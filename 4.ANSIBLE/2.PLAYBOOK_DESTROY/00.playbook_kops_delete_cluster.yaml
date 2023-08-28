@@ -5,26 +5,14 @@
   environment:
       AWS_PAGER: ""
       AWS_PROFILE: "{{ AWS_PROFILE }}"  # Set your desired AWS profile here
-
-  vars:
-    ansible_python_interpreter: "/usr/bin/python3"
-    playbook_file_path: "{{ (lookup('file', '/proc/self/cmdline') | regex_replace('\u0000',' ')).split() | select('match','^.*[.]ya?ml$') | list | first }}"
-    playbook_file_name: "{{ playbook_file_path | basename }}"
+      KOPS_CLUSTER_NAME: "{{ KOPS_CLUSTER_NAME }}"
+      KOPS_STATE_STORE: "{{ KOPS_STATE_S3 }}"
 
   tasks:
 
-    # - name: Check if S3 Bucket kops state directory exists
-    #   shell: "aws s3api list-objects --bucket {{ KOPS_STATE_S3_BUCKET }} --prefix {{ KOPS_STATE_S3_DIR }}/ --profile {{ AWS_PROFILE }}"
-    #   ignore_errors: yes
-    #   register: s3_object_status
-
-    # - name: Create S3 Bucket directory for kops state
-    #   shell: "aws s3api put-object --bucket {{ KOPS_STATE_S3_BUCKET }} --key {{ KOPS_STATE_S3_DIR }}/ --profile {{ AWS_PROFILE }}"
-    #   when: s3_object_status.rc != 0
-
     - name: Check cluster existence
       shell: |
-        kops get cluster "{{ KOPS_CLUSTER_NAME }}" --state {{ KOPS_STATE_S3 }}
+        kops get cluster "{{ KOPS_CLUSTER_NAME }}"
       register: cluster_exists
       ignore_errors: true
       changed_when: false
@@ -35,6 +23,34 @@
         
     - name: delete kubernetes cluster
       shell: |
-        kops delete cluster --name {{ KOPS_CLUSTER_NAME }} --state {{ KOPS_STATE_S3 }} --yes
+        kops delete cluster --yes
       when: cluster_exists|default(false)
-      #
+
+      vars:
+        hosted_zone_id: your_hosted_zone_id
+
+    - name: Get existing A and AAAA records
+      community.aws.route53_info:
+        aws_profile: "{{ AWS_PROFILE }}"
+        hosted_zone_id: "{{ AWS_RT53_ZONE_ID }}"
+      register: existing_records
+      when: cluster_exists|default(false)
+
+    - name: Delete A and AAAA records
+      community.aws.route53:
+        aws_profile: "{{ AWS_PROFILE }}"
+        hosted_zone_id: "{{ AWS_RT53_ZONE_ID }}"
+        state: absent
+        type: "{{ item.type }}"
+        name: "{{ item.name }}"
+      loop: "{{ existing_records.record_sets }}"
+      when: cluster_exists|default(false) and item.type in ['A', 'AAAA']
+
+    # - name: Check if S3 Bucket kops state directory exists
+    #   shell: "aws s3api list-objects --bucket {{ KOPS_STATE_S3_BUCKET }} --prefix {{ KOPS_STATE_S3_DIR }}/ --profile {{ AWS_PROFILE }}"
+    #   ignore_errors: yes
+    #   register: s3_object_status
+
+    # - name: Create S3 Bucket directory for kops state
+    #   shell: "aws s3api put-object --bucket {{ KOPS_STATE_S3_BUCKET }} --key {{ KOPS_STATE_S3_DIR }}/ --profile {{ AWS_PROFILE }}"
+    #   when: s3_object_status.rc != 0

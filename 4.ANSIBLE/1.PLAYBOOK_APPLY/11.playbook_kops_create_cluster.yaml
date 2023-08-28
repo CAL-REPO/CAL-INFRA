@@ -62,34 +62,6 @@
       set_fact:
         cluster_exists: "{{ cluster_exists.rc == 0 }}"
 
-    # - name: Create Kubernetes cluster configuration file to local
-    #   shell: |
-    #     kops create cluster \
-    #     --state {{ KOPS_STATE_S3 }} \
-    #     --name {{ KOPS_CLUSTER_NAME }} \
-    #     --kubernetes-version {{ KOPS_CLUSTER_VERSION }} \
-    #     --container-runtime {{ KOPS_CLUSTER_CONTAINER_RUNTIME }} \
-    #     --cloud {{ KOPS_CLUSTER_CLOUD }} \
-    #     --authorization RBAC \
-    #     --api-public-name {{ KOPS_CLUSTER_API_PUBLIC_NAME }} \
-    #     --topology {{ KOPS_CLUSTER_TOPOLOGY }} \
-    #     --networking {{ KOPS_CLUSTER_NETWORK }} \
-    #     --network-id {{ KOPS_CLUSTER_NETWORK_ID }} \
-    #     --api-loadbalancer-type {{ KOPS_CLUSTER_LB_TYPE }} \
-    #     --api-loadbalancer-class {{ KOPS_CLUSTER_LB_CLASS }} \
-    #     --zones "{{ KOPS_CLUSTER_ZONES }}" \
-    #     --control-plane-zones "{{ KOPS_CLUSTER_MASTER_ZONES }}" \
-    #     --master-size {{ KOPS_CLUSTER_MASTER_SIZE }} \
-    #     --node-size {{ KOPS_CLUSTER_NODE_SIZE }} \
-    #     --node-count {{ KOPS_CLUSTER_NODE_COUNT }} \
-    #     --utility-subnets "{{ KOPS_CLUSTER_UTILITY_SUBNETS }}" \
-    #     --subnets "{{ KOPS_CLUSTER_SUBNETS }}" \
-    #     --admin-access {{ KOPS_CLUSTER_BASTION_CIDR }} \
-    #     --ssh-public-key {{ KOPS_CLUSTER_SSH_PUBLIC_KEY_FILE }} \
-    #     --dry-run \
-    #     -oyaml > {{ KOPS_DIR }}/{{ KOPS_CLUSTER_NAME }}.yaml
-    #   when: not cluster_exists|default(false)
-
     - name: Create kubernetes cluster configuration file with template
       shell: |
         python3 "{{ KOPS_DIR }}/{{ KOPS_TPL_RENDERER_PY_FILE_NAME }}" \
