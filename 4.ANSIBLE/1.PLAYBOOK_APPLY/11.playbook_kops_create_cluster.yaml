@@ -88,6 +88,7 @@
       shell: |
         kops rolling-update cluster --yes
         kops rolling-update cluster --target {{ KOPS_CONF_YAML_FILE }} --yes --cloudonly
+      ignore_errors: true
       when: cluster_exists|default(false)
 
     - name: Validate kubernetes cluster
