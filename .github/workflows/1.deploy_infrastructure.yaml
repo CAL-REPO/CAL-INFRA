@@ -130,8 +130,8 @@ jobs:
           TF_VAR_OPS_GIT_USER_EMAIL: ${{ env.OPS_GIT_USER_EMAIL }}  
           TF_VAR_OPS_GIT_REPO_URL: "https://github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
           TF_VAR_OPS_GIT_REPO_AUTH_URL: "https://${{ env.OPS_GIT_REPO_OWNER }}:${{ env.OPS_GIT_REPO_PERSONAL_TOKEN }}@github.com/${{ env.OPS_GIT_REPO_OWNER }}/${{ env.OPS_GIT_REPO_NAME }}.git"
-          TF_VAR_ANSIBLE_CONF_FILE: "../../${{ env.INFRA_ANSIBLE_CONF }}"
-          TF_VAR_ANSIBLE_HOSTS_FILE: "../../${{ env.INFRA_ANSIBLE_HOSTS }}"
+          TF_VAR_ANSIBLE_CONF_FILE: "${{ env.INFRA_ANSIBLE_CONF }}"
+          TF_VAR_ANSIBLE_HOSTS_FILE: "${{ env.INFRA_ANSIBLE_HOSTS }}"
           TF_VAR_KOPS_TPL_RENDERER_PY_FILE: "${{ env.INFRA_KOPS_TPL_RENDERER_PY_FILE }}"
           TF_VAR_KOPS_TPL_J2_FILE: "${{ env.INFRA_KOPS_TPL_J2_FILE }}"
           TF_VAR_KOPS_TPL_VALUE_JSON_FILE: "${{ env.INFRA_KOPS_TPL_VALUE_JSON_FILE }}"
