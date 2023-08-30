@@ -16,7 +16,7 @@
     - name: Apply Namespace YAML Files
       kubernetes.core.k8s:
         state: present
-        src: "{{ playbook_dir }}/../5.KOPS/03.cluster-namespace-manifest.yaml"
+        src: "{{ playbook_dir }}/../../5.KOPS/03.cluster-namespace-manifest.yaml"
 
     - name: Add Helm repo for NGINX Ingress Controller
       kubernetes.core.helm_repository:
@@ -31,7 +31,7 @@
         wait: yes
         namespace: nginx-ingress-controller  # or the appropriate namespace
         values_files:
-          - "{{ playbook_dir }}/../5.KOPS/04.helm_value_aws_alb_ingress_controller.yaml"
+          - "{{ playbook_dir }}/../../5.KOPS/04.helm_value_aws_alb_ingress_controller.yaml"
         state: present
         
     - name: Add Helm repo for ArgoCD
