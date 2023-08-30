@@ -132,7 +132,7 @@ locals {
             KOPS_TPL_VALUE_JSON_FILE_NAME="${basename(var.KOPS_TPL_VALUE_JSON_FILE)}"
             KOPS_CONF_YAML_FILE="{{ playbook_dir }}/../../${var.KOPS_CONF_YAML_FILE}"
             KOPS_CONF_YAML_FILE_NAME="${basename(var.KOPS_CONF_YAML_FILE)}"
-            KOPS_MANIFEST_YAML_DIR="{{ playbook_dir }}../../${var.KOPS_MANIFEST_YAML_DIR}"
+            K8S_MANIFEST_DIR="{{ playbook_dir }}../../${var.K8S_MANIFEST_DIR}"
             KOPS_DIR="/home/${var.OPS_USER_NAME}/infra/kops"
             KOPS_CLUSTER_NAME="${var.SUB_DOMAINs[0]}.${var.CF_DOMAIN_MAIN}"
             KOPS_STATE_S3_BUCKET="${var.AWS_KOPS_STATE_S3_BUCKET}"

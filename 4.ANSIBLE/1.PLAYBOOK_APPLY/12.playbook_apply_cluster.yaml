@@ -15,7 +15,7 @@
   
     - name: Find all files in source directory
       find:
-        paths: "{{ KOPS_MANIFEST_YAML_DIR }}"
+        paths: "{{ K8S_MANIFEST_DIR }}"
         recurse: yes
         file_type: file
       register: files_to_copy

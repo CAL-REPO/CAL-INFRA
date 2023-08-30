@@ -171,6 +171,6 @@ variable "KOPS_CONF_YAML_FILE" {
     description = "Kubernetes cluster configuration file path to set as ansible variant"
 }
 
-variable "K8S_MANIFEST_YAML_DIR" {
+variable "K8S_MANIFEST_DIR" {
     description = "Kubernetes cluster"
 }
