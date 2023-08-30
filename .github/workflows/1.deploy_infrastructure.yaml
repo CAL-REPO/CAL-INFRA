@@ -110,11 +110,12 @@ jobs:
       - name: Execute ansible for delete kubernetes cluster
         working-directory: deploy
         run: |
-          export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
-          export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
-          export HOST_GROUP="bastion"
           if [[ "${{ env.DEPLOY_MODE }}" == "${{ env.PROCESS_DESTROY }}" ]]; then
+            export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
+            export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
+            export HOST_GROUP="bastion"
             export PLAYBOOK_DIR="4.ANSIBLE/2.PLAYBOOK_DESTROY"
+            ansible-galaxy collection install community.kubernetes
             bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           fi
 
@@ -148,11 +149,12 @@ jobs:
       - name: Execute ansible to create kubernetes cluster
         working-directory: deploy
         run: |
-          export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
-          export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
-          export HOST_GROUP="bastion"
           if [[ "${{ env.DEPLOY_MODE }}" == "${{ env.PROCESS_DEPLOY }}" ]]; then
+            export CONFIG_FILE_PATH="${{ env.INFRA_ANSIBLE_CONF }}"
+            export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
+            export HOST_GROUP="bastion"
             export PLAYBOOK_DIR="4.ANSIBLE/1.PLAYBOOK_APPLY"
+            ansible-galaxy collection install community.kubernetes
             bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           fi
 
