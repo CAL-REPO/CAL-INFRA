@@ -44,8 +44,15 @@
     when: ansible_os_family == 'RedHat'
 
   - name: Install Jinja2
-    become: true
-    become_user: root
+    # become: true
+    # become_user: root
     pip:
       name: Jinja2
       executable: pip3
+
+  - name: Install kubernetes Python Library
+    # become: true
+    # become_user: root
+    pip:
+      name: kubernetes
+      state: present
