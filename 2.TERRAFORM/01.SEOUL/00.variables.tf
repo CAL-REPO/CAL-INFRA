@@ -170,3 +170,7 @@ variable "KOPS_TPL_VALUE_JSON_FILE" {
 variable "KOPS_CONF_YAML_FILE" {
     description = "Kubernetes cluster configuration file path to set as ansible variant"
 }
+
+variable "K8S_MANIFEST_YAML_DIR" {
+    description = "Kubernetes cluster"
+}

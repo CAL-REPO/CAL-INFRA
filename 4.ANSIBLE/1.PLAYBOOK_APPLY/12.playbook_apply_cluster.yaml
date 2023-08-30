@@ -13,10 +13,29 @@
 
   tasks:
   
+    - name: Find all files in source directory
+      find:
+        paths: "{{ KOPS_MANIFEST_YAML_DIR }}"
+        recurse: yes
+        file_type: file
+      register: files_to_copy
+
+    - name: Copy files to remote host
+      copy:
+        src: "{{ item.path }}"
+        dest: "{{ KOPS_DIR }}/"
+        owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
+        group: "{{ ansible_user }}"  # Optional: Set the group of the file
+        mode: 0644  # Optional: Set the permissions of the file
+      loop: "{{ files_to_copy.files }}"
+      loop_control:
+        label: "{{ item.path }}"
+      delegate_to: localhost
+
     - name: Apply Namespace YAML Files
       kubernetes.core.k8s:
         state: present
-        src: "{{ playbook_dir }}/../../5.KOPS/03.cluster-namespace-manifest.yaml"
+        src: "{{ KOPS_DIR }}/03.cluster_namespace_manifest.yaml"
 
     - name: Add Helm repo for NGINX Ingress Controller
       kubernetes.core.helm_repository:
@@ -31,7 +50,7 @@
         wait: yes
         namespace: nginx-ingress-controller  # or the appropriate namespace
         values_files:
-          - "{{ playbook_dir }}/../../5.KOPS/04.helm_value_aws_alb_ingress_controller.yaml"
+          - "{{ KOPS_DIR }}/04.helm_value_aws_alb_ingress_controller.yaml"
         state: present
         
     - name: Add Helm repo for ArgoCD
@@ -47,6 +66,6 @@
         wait: yes
         namespace: argocd  # Set the desired namespace
         values_files:
-          - "{{ playbook_dir }}/../5.KOPS/05.helm_value_argocd.yaml"
+          - "{{ KOPS_DIR }}/05.helm_value_argocd.yaml"
         state: present
         
