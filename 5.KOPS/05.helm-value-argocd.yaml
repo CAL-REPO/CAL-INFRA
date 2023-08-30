@@ -9,7 +9,7 @@ server:
     pathType: ImplementationSpecific
     path: /
     hosts:
-      - argocd.example.com  # Replace with your domain
+      - argocd.calife.co.kr  # Replace with your domain
     tls: []
   tls:
     # - secretName: argocd-tls
@@ -17,14 +17,14 @@ server:
     #     - argocd.example.com
   config:
     repositories:
-      - url: https://github.com/yourusername/your-repo
+      - url: https://github.com/CAL-REPO/CAL-OPS
         path: my-apps
         usernameSecret:
           name: argocd-repo-creds
-          key: username
+          key: test
         passwordSecret:
           name: argocd-repo-creds
-          key: password
+          key: test123
     resourceCustomizations: |
       admissionregistration.k8s.io/MutatingWebhookConfiguration.resources={limits: {cpu: 100m, memory: 128Mi}}
       admissionregistration.k8s.io/MutatingWebhookConfiguration.resources.limits.cpu=100m
