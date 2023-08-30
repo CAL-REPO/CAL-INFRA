@@ -18,17 +18,17 @@
       shell: |
         ansible-galaxy collection install community.kubernetes
 
-    - name: Create ingress-nginx namespace
-      k8s:
-        definition: "{{ lookup('file', '{{ ansible_dir }}/../../5.KOPS/03.kops_cluster_namespace.yaml') }}"
-      register: namespace_result
+    # - name: Create ingress-nginx namespace
+    #   k8s:
+    #     definition: "{{ lookup('file', '{{ ansible_dir }}/../../5.KOPS/03.kops_cluster_namespace.yaml') }}"
+    #   register: namespace_result
 
-    - name: Install Ingress Controller
-      helm:
-        name: my-ingress-controller
-        chart_ref: ingress-nginx/ingress-nginx
-        release_namespace: ingress-nginx
-        values_files:
-          - "{{ ansible_dir }}/../../5.KOPS/04.helm-aws-alb-ingress-controller-value.yaml"
-        state: present
-      when: namespace_result|success
+    # - name: Install Ingress Controller
+    #   helm:
+    #     name: my-ingress-controller
+    #     chart_ref: ingress-nginx/ingress-nginx
+    #     release_namespace: ingress-nginx
+    #     values_files:
+    #       - "{{ ansible_dir }}/../../5.KOPS/04.helm-aws-alb-ingress-controller-value.yaml"
+    #     state: present
+    #   when: namespace_result|success
