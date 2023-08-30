@@ -68,4 +68,4 @@
         values_files:
           - "{{ KOPS_DIR }}/05.helm_value_argocd.yaml"
         state: present
-        
+        ##
