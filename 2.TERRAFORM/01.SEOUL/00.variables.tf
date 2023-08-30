@@ -136,13 +136,13 @@ variable "OPS_GIT_REPO_AUTH_URL" {
     description = "Git repository auth url for OPS"
 }
 
-variable "AWS_ANSIBLE_S3_BUCKET" {
-    description = "Ansible configuration file path"
-}
+# variable "AWS_ANSIBLE_S3_BUCKET" {
+#     description = "Ansible configuration file path"
+# }
 
-variable "AWS_ANSIBLE_S3_BUCKET_DIR" {
-    description = "Ansible configuration file path"
-}
+# variable "AWS_ANSIBLE_S3_BUCKET_DIR" {
+#     description = "Ansible configuration file path"
+# }
 
 variable "ANSIBLE_CONF_FILE" {
     description = "Ansible configuration file path"
