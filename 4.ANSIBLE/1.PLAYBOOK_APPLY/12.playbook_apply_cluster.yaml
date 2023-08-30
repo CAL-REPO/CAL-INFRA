@@ -2,6 +2,9 @@
   gather_facts: true
   hosts: "{{ host_group }}"
 
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+
   environment:
       AWS_PAGER: ""
       AWS_PROFILE: "{{ AWS_PROFILE }}"  # Set your desired AWS profile here
@@ -10,37 +13,42 @@
 
   tasks:
   
+
+
     - name: Apply Namespace YAML Files
-      community.kubernetes.k8s:
+      kubernetes.core.k8s:
         state: present
         src: "{{ playbook_dir }}/../5.KOPS/03.cluster-namespace-manifest.yaml"
 
     - name: Add Helm repo for NGINX Ingress Controller
-      community.kubernetes.helm_repository:
+      kubernetes.core.helm_repository:
         name: bitnami
         repo_url: "https://charts.bitnami.com/bitnami"
         state: present
 
     - name: Install NGINX Ingress Controller Helm chart
-      community.kubernetes.helm:
+      kubernetes.core.helm:
         release_name: nginx-ingress
         chart_ref: bitnami/nginx-ingress-controller
+        wait: yes
         namespace: nginx-ingress-controller  # or the appropriate namespace
         values_files:
-          - "{{ playbook_dir }}/../5.KOPS/04.aws-alb-ingress-controller-value.yaml"
+          - "{{ playbook_dir }}/../5.KOPS/04.helm_value_aws_alb_ingress_controller.yaml"
         state: present
-        wait: yes
-
+        
     - name: Add Helm repo for ArgoCD
-      community.kubernetes.helm_repository:
+      kubernetes.core.helm_repository:
         name: argo-cd
         repo_url: "https://argoproj.github.io/argo-helm"
         state: present
 
     - name: Install ArgoCD Helm chart
-      community.kubernetes.helm:
+      kubernetes.core.helm:
         release_name: argocd
         chart_ref: argo-cd/argo-cd
-        namespace: argocd  # Set the desired namespace
-        state: present
         wait: yes
+        namespace: argocd  # Set the desired namespace
+        values_files:
+          - "{{ playbook_dir }}/../5.KOPS/05.helm_value_argocd.yaml"
+        state: present
+        
