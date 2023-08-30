@@ -13,8 +13,6 @@
 
   tasks:
   
-
-
     - name: Apply Namespace YAML Files
       kubernetes.core.k8s:
         state: present
