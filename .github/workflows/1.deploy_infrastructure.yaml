@@ -36,10 +36,10 @@ jobs:
       INFRA_ANSIBLE_CONF: "4.ANSIBLE/0.CONFIG/ansible.cfg"
       INFRA_ANSIBLE_HOSTS: "4.ANSIBLE/0.CONFIG/hosts"
       INFRA_KOPS_TPL_RENDERER_PY_FILE: "1.WORKFLOWS_SCRIPT/renderer_from_j2_to_yaml.py"
-      INFRA_KOPS_TPL_J2_FILE: "5.KOPS/1.CLUSTER/00.kops_cluster_tpl.j2"
-      INFRA_KOPS_TPL_VALUE_JSON_FILE: "5.KOPS/1.CLUSTER/01.kops_cluster_tpl_value.json"
-      INFRA_KOPS_CONF_YAML_FILE: "5.KOPS/1.CLUSTER/02.kops_cluster_conf.yaml"
-      INFRA_K8S_MANIFEST_YAML_DIR: "5.KOPS/2.MANIFEST"
+      INFRA_KOPS_TPL_J2_FILE: "5.KOPS/0.CLUSTER/00.kops_cluster_tpl.j2"
+      INFRA_KOPS_TPL_VALUE_JSON_FILE: "5.KOPS/0.CLUSTER/01.kops_cluster_tpl_value.json"
+      INFRA_KOPS_CONF_YAML_FILE: "5.KOPS/0.CLUSTER/02.kops_cluster_conf.yaml"
+      INFRA_K8S_MANIFEST_DIR: "5.KOPS/1.MANIFEST"
       CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL_MAIN_1 }}
       CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY_MAIN_1 }}
       CLOUDFLARE_DOMAIN: ${{ secrets.CLOUDFLARE_DOMAIN_MAIN_1 }}
@@ -138,6 +138,7 @@ jobs:
           TF_VAR_KOPS_TPL_J2_FILE: "${{ env.INFRA_KOPS_TPL_J2_FILE }}"
           TF_VAR_KOPS_TPL_VALUE_JSON_FILE: "${{ env.INFRA_KOPS_TPL_VALUE_JSON_FILE }}"
           TF_VAR_KOPS_CONF_YAML_FILE: "${{ env.INFRA_KOPS_CONF_YAML_FILE }}"
+          TF_VAR_K8S_MANIFEST_DIR: "${{ env.INFRA_K8S_MANIFEST_DIR }}"
         run: |
           if [[ "${{ env.DEPLOY_MODE }}" == "${{ env.PROCESS_DEPLOY }}" ]]; then
             terraform validate
