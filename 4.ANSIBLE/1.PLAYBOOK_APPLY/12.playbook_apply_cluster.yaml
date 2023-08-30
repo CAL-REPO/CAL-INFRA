@@ -1,4 +1,4 @@
-- name: Create kops cluster
+- name: Install 
   gather_facts: true
   hosts: "{{ host_group }}"
 

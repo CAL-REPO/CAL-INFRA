@@ -5,7 +5,7 @@
   tasks:
     - name: Create kops directory
       file:
-        path: /home/{{ ansible_user }}/infra/kops
+        path: "{{ KOPS_DIR }}"
         state: directory
 
     - name: Copy kubernetes cluster configuration file renderer to remote hosts

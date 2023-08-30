@@ -123,7 +123,7 @@ locals {
             ANSIBLE_CONF_FILE="{{ playbook_dir }}/../../${var.ANSIBLE_CONF_FILE}"
             ANSIBLE_CONF_FILE_NAME="${basename(var.KOPS_TPL_RENDERER_PY_FILE)}"
             ANSIBLE_HOSTS_FILE="{{ playbook_dir }}/../../${var.ANSIBLE_HOSTS_FILE}"
-            ANSIBLE_HOSTS_FILE_NAME="${basename(var.KOPS_TPL_RENDERER_PY_FILE)}"     
+            ANSIBLE_HOSTS_FILE_NAME="${basename(var.KOPS_TPL_RENDERER_PY_FILE)}"
             KOPS_TPL_RENDERER_PY_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_RENDERER_PY_FILE}"
             KOPS_TPL_RENDERER_PY_FILE_NAME="${basename(var.KOPS_TPL_RENDERER_PY_FILE)}"
             KOPS_TPL_J2_FILE="{{ playbook_dir }}/../../${var.KOPS_TPL_J2_FILE}"
