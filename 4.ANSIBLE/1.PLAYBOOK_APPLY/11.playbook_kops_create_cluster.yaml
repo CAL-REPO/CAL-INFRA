@@ -61,6 +61,7 @@
     - name: Set cluster exists fact
       set_fact:
         cluster_exists: "{{ cluster_exists.rc == 0 }}"
+      ignore_errors: yes
 
     - name: Create kubernetes cluster configuration file with template
       shell: |
