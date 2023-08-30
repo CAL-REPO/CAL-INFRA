@@ -1,4 +1,4 @@
-- name: Install 
+- name: Install ArgoCD via Helm with NGINX Ingress 
   gather_facts: true
   hosts: "{{ host_group }}"
 
@@ -8,27 +8,45 @@
       KOPS_CLUSTER_NAME: "{{ KOPS_CLUSTER_NAME }}"
       KOPS_STATE_STORE: "{{ KOPS_STATE_S3 }}"
 
+  vars:
+    argocd_domain: argocd.calife.co.kr  # Replace with your domain
+    helm_chart_url: "https://charts.bitnami.com/bitnami"
+
   tasks:
+  
+    - name: Add Helm repo for NGINX Ingress Controller
+      community.kubernetes.helm_repository:
+        name: bitnami
+        repo_url: "{{ helm_chart_url }}"
+        state: present
 
-    - name: Install Kubernetes Collection
-      shell: |
-        pip install kubernetes
+    - name: Install NGINX Ingress Controller Helm chart
+      community.kubernetes.helm:
+        release_name: nginx-ingress
+        chart_ref: bitnami/nginx-ingress-controller
+        namespace: default  # or the appropriate namespace
+        state: present
 
-    - name: Install Helm Collection
-      shell: |
-        ansible-galaxy collection install community.kubernetes
-
-    # - name: Create ingress-nginx namespace
-    #   k8s:
-    #     definition: "{{ lookup('file', '{{ ansible_dir }}/../../5.KOPS/03.kops_cluster_namespace.yaml') }}"
-    #   register: namespace_result
-
-    # - name: Install Ingress Controller
-    #   helm:
-    #     name: my-ingress-controller
-    #     chart_ref: ingress-nginx/ingress-nginx
-    #     release_namespace: ingress-nginx
-    #     values_files:
-    #       - "{{ ansible_dir }}/../../5.KOPS/04.helm-aws-alb-ingress-controller-value.yaml"
-    #     state: present
-    #   when: namespace_result|success
+    - name: Create ArgoCD Ingress
+      community.kubernetes.k8s:
+        definition:
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: argocd-server-ingress
+            namespace: argocd
+            annotations:
+              kubernetes.io/ingress.class: nginx
+              nginx.ingress.kubernetes.io/rewrite-target: /
+          spec:
+            rules:
+              - host: "{{ argocd_domain }}"
+                http:
+                  paths:
+                    - pathType: Prefix
+                      path: /
+                      backend:
+                        service:
+                          name: argocd-server
+                          port:
+                            number: 80
