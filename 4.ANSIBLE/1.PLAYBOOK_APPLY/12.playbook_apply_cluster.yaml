@@ -17,12 +17,12 @@
       copy:
         src: "{{ item }}"
         dest: "{{ KOPS_DIR }}/"
-        owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
-        group: "{{ ansible_user }}"  # Optional: Set the group of the file
-        mode: 0644  # Optional: Set the permissions of the file
+        # owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
+        # group: "{{ ansible_user }}"  # Optional: Set the group of the file
+        # mode: 0644  # Optional: Set the permissions of the file
       with_fileglob:
         - "{{ K8S_MANIFEST_DIR }}/*"
-      delegate_to: localhost
+      # delegate_to: localhost
 
     # - name: Copy files to remote host
     #   copy:
