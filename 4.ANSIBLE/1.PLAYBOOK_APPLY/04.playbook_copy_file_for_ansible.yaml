@@ -6,21 +6,21 @@
 
     - name: Create ansible configuration directory
       file:
-        path: /home/{{ ansible_user }}/.ansible
+        path: "{{ ANSIBLE_DIR }}"
         state: directory
 
     - name: Copy ansible configuration file to remote hosts
       copy:
-        src: /home/runner/.ansible/config
-        dest: /home/{{ ansible_user }}/.ansible/config
+        src: "{{ ANSIBLE_CONF_FILE }}"
+        dest: "{{ ANSIBLE_DIR }}/{{ ANSIBLE_CONF_FILE_NAME }}"
         owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
         group: "{{ ansible_user }}"  # Optional: Set the group of the file
         mode: 0644  # Optional: Set the permissions of the file
 
-    - name: Copy ansible credential file to remote hosts
+    - name: Copy ansible hosts file to remote hosts
       copy:
-        src: /home/runner/.ansible/credentials
-        dest: /home/{{ ansible_user }}/.ansible/credentials
+        src: "{{ ANSIBLE_HOSTS_FILE }}"
+        dest: "{{ ANSIBLE_DIR }}/{{ ANSIBLE_HOSTS_FILE_NAME }}"
         owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
         group: "{{ ansible_user }}"  # Optional: Set the group of the file
         mode: 0644  # Optional: Set the permissions of the file

@@ -1,0 +1,17 @@
+- name: Send ansible configuration file
+  gather_facts: false
+  hosts: "{{ host_group }}"
+
+  tasks:
+
+    - name: Fetch ansible configuration file from remote hosts
+      fetch:
+        src: "{{ ANSIBLE_DIR }}/{{ ANSIBLE_CONF_FILE_NAME }}"  # Remote file path
+        dest: "{{ ANSIBLE_CONF_FILE }}"  # Local destination directory
+        flat: yes  # Copy only the file without creating subdirectories
+  
+    - name: Fetch ansible hosts file from remote hosts
+      fetch:
+        src: "{{ ANSIBLE_DIR }}/{{ ANSIBLE_HOSTS_FILE_NAME }}"  # Remote file path
+        dest: "{{ ANSIBLE_HOSTS_FILE }}"  # Local destination directory
+        flat: yes  # Copy only the file without creating subdirectories
