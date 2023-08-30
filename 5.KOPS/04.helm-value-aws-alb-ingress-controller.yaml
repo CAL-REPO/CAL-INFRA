@@ -4,5 +4,6 @@ controller:
     use-forwarded-headers: "true"
     use-proxy-protocol: "true"
   service:
+    enabled: true
     annotations:
       "service.beta.kubernetes.io/aws-load-balancer-type": "alb"

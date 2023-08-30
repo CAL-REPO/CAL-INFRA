@@ -8,10 +8,6 @@
       KOPS_CLUSTER_NAME: "{{ KOPS_CLUSTER_NAME }}"
       KOPS_STATE_STORE: "{{ KOPS_STATE_S3 }}"
 
-  vars:
-    argocd_domain: argocd.calife.co.kr  # Replace with your domain
-    helm_chart_url: "https://charts.bitnami.com/bitnami"
-
   tasks:
   
     - name: Apply Namespace YAML Files
@@ -22,14 +18,29 @@
     - name: Add Helm repo for NGINX Ingress Controller
       community.kubernetes.helm_repository:
         name: bitnami
-        repo_url: "{{ helm_chart_url }}"
+        repo_url: "https://charts.bitnami.com/bitnami"
         state: present
 
     - name: Install NGINX Ingress Controller Helm chart
       community.kubernetes.helm:
         release_name: nginx-ingress
         chart_ref: bitnami/nginx-ingress-controller
-        namespace: default  # or the appropriate namespace
+        namespace: nginx-ingress-controller  # or the appropriate namespace
         values_files:
           - "{{ playbook_dir }}/../5.KOPS/04.aws-alb-ingress-controller-value.yaml"
         state: present
+        wait: yes
+
+    - name: Add Helm repo for ArgoCD
+      community.kubernetes.helm_repository:
+        name: argo-cd
+        repo_url: "https://argoproj.github.io/argo-helm"
+        state: present
+
+    - name: Install ArgoCD Helm chart
+      community.kubernetes.helm:
+        release_name: argocd
+        chart_ref: argo-cd/argo-cd
+        namespace: argocd  # Set the desired namespace
+        state: present
+        wait: yes

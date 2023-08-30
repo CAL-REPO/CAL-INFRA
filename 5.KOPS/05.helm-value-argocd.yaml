@@ -1,0 +1,31 @@
+# values.yaml
+
+# Override default values here
+server:
+  extraArgs: []
+  ingress:
+    enabled: true
+    annotations: {}
+    pathType: ImplementationSpecific
+    path: /
+    hosts:
+      - argocd.example.com  # Replace with your domain
+    tls: []
+  tls:
+    # - secretName: argocd-tls
+    #   hosts:
+    #     - argocd.example.com
+  config:
+    repositories:
+      - url: https://github.com/yourusername/your-repo
+        path: my-apps
+        usernameSecret:
+          name: argocd-repo-creds
+          key: username
+        passwordSecret:
+          name: argocd-repo-creds
+          key: password
+    resourceCustomizations: |
+      admissionregistration.k8s.io/MutatingWebhookConfiguration.resources={limits: {cpu: 100m, memory: 128Mi}}
+      admissionregistration.k8s.io/MutatingWebhookConfiguration.resources.limits.cpu=100m
+      admissionregistration.k8s.io/MutatingWebhookConfiguration.resources.limits.memory=128Mi
