@@ -12,60 +12,64 @@
       KOPS_STATE_STORE: "{{ KOPS_STATE_S3 }}"
 
   tasks:
-  
-    - name: Find all files in source directory
-      find:
-        paths: "{{ K8S_MANIFEST_DIR }}"
-        recurse: yes
-        file_type: file
-      register: files_to_copy
 
     - name: Copy files to remote host
       copy:
-        src: "{{ item.path }}"
+        src: "{{ item }}"
         dest: "{{ KOPS_DIR }}/"
         owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
         group: "{{ ansible_user }}"  # Optional: Set the group of the file
         mode: 0644  # Optional: Set the permissions of the file
-      loop: "{{ files_to_copy.files }}"
-      loop_control:
-        label: "{{ item.path }}"
+      with_fileglob:
+        - "{{ K8S_MANIFEST_DIR }}/*"
       delegate_to: localhost
 
-    - name: Apply Namespace YAML Files
-      kubernetes.core.k8s:
-        state: present
-        src: "{{ KOPS_DIR }}/03.cluster_namespace_manifest.yaml"
+    # - name: Copy files to remote host
+    #   copy:
+    #     src: "{{ item.path }}"
+    #     dest: "{{ KOPS_DIR }}/"
+    #     owner: "{{ ansible_user }}"  # Optional: Set the owner of the file
+    #     group: "{{ ansible_user }}"  # Optional: Set the group of the file
+    #     mode: 0644  # Optional: Set the permissions of the file
+    #   loop: "{{ files_to_copy.files }}"
+    #   loop_control:
+    #     label: "{{ item.path }}"
+    #   delegate_to: localhost
 
-    - name: Add Helm repo for NGINX Ingress Controller
-      kubernetes.core.helm_repository:
-        name: bitnami
-        repo_url: "https://charts.bitnami.com/bitnami"
-        state: present
+    # - name: Apply Namespace YAML Files
+    #   kubernetes.core.k8s:
+    #     state: present
+    #     src: "{{ KOPS_DIR }}/03.cluster_namespace_manifest.yaml"
 
-    - name: Install NGINX Ingress Controller Helm chart
-      kubernetes.core.helm:
-        release_name: nginx-ingress
-        chart_ref: bitnami/nginx-ingress-controller
-        wait: yes
-        namespace: nginx-ingress-controller  # or the appropriate namespace
-        values_files:
-          - "{{ KOPS_DIR }}/04.helm_value_aws_alb_ingress_controller.yaml"
-        state: present
+    # - name: Add Helm repo for NGINX Ingress Controller
+    #   kubernetes.core.helm_repository:
+    #     name: bitnami
+    #     repo_url: "https://charts.bitnami.com/bitnami"
+    #     state: present
+
+    # - name: Install NGINX Ingress Controller Helm chart
+    #   kubernetes.core.helm:
+    #     release_name: nginx-ingress
+    #     chart_ref: bitnami/nginx-ingress-controller
+    #     wait: yes
+    #     namespace: nginx-ingress-controller  # or the appropriate namespace
+    #     values_files:
+    #       - "{{ KOPS_DIR }}/04.helm_value_aws_alb_ingress_controller.yaml"
+    #     state: present
         
-    - name: Add Helm repo for ArgoCD
-      kubernetes.core.helm_repository:
-        name: argo-cd
-        repo_url: "https://argoproj.github.io/argo-helm"
-        state: present
+    # - name: Add Helm repo for ArgoCD
+    #   kubernetes.core.helm_repository:
+    #     name: argo-cd
+    #     repo_url: "https://argoproj.github.io/argo-helm"
+    #     state: present
 
-    - name: Install ArgoCD Helm chart
-      kubernetes.core.helm:
-        release_name: argocd
-        chart_ref: argo-cd/argo-cd
-        wait: yes
-        namespace: argocd  # Set the desired namespace
-        values_files:
-          - "{{ KOPS_DIR }}/05.helm_value_argocd.yaml"
-        state: present
-        ##
+    # - name: Install ArgoCD Helm chart
+    #   kubernetes.core.helm:
+    #     release_name: argocd
+    #     chart_ref: argo-cd/argo-cd
+    #     wait: yes
+    #     namespace: argocd  # Set the desired namespace
+    #     values_files:
+    #       - "{{ KOPS_DIR }}/05.helm_value_argocd.yaml"
+    #     state: present
+    #     ##
