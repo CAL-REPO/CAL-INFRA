@@ -17,7 +17,7 @@
     - name: Apply Namespace YAML Files
       community.kubernetes.k8s:
         state: present
-        src: "{{ playbook_dir }}/../5.KOPS/03.kops_cluster_namespace.yaml"
+        src: "{{ playbook_dir }}/../5.KOPS/03.cluster-namespace-manifest.yaml"
 
     - name: Add Helm repo for NGINX Ingress Controller
       community.kubernetes.helm_repository:
@@ -31,5 +31,5 @@
         chart_ref: bitnami/nginx-ingress-controller
         namespace: default  # or the appropriate namespace
         values_files:
-          - values.yaml
+          - "{{ playbook_dir }}/../5.KOPS/04.aws-alb-ingress-controller-value.yaml"
         state: present
