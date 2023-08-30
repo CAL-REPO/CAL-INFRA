@@ -120,6 +120,8 @@ locals {
             GIT_COMMIT_MESSAGE="Commited by infra manager"
             GIT_BRANCH_NAME="initial"
             ANSIBLE_DIR="/home/${var.OPS_USER_NAME}/infra/ansible"
+            ANSIBLE_S3_BUCKET="${var.AWS_ANSIBLE_S3_BUCKET}"
+            ANSIBLE_STATE_S3_DIR="${var.AWS_ANSIBLE_S3_BUCKET_DIR}"
             ANSIBLE_CONF_FILE="{{ playbook_dir }}/../../${var.ANSIBLE_CONF_FILE}"
             ANSIBLE_CONF_FILE_NAME="${basename(var.ANSIBLE_CONF_FILE)}"
             ANSIBLE_HOSTS_FILE="{{ playbook_dir }}/../../${var.ANSIBLE_HOSTS_FILE}"

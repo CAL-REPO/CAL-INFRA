@@ -24,17 +24,6 @@ variable "AWS_KEY_S3_BUCKET_DIR"{
     default = ""
 }
 
-variable "AWS_KOPS_STATE_S3_BUCKET"{
-    type = string
-    default = ""
-    description = "Main domain name is managed by cloudflare"
-}
-
-variable "AWS_KOPS_STATE_S3_BUCKET_DIR" {
-    type = string
-    default = ""
-}
-
 variable "AWS_VPC_CIDRs" {
     type = list(string)
     default = []
@@ -147,12 +136,31 @@ variable "OPS_GIT_REPO_AUTH_URL" {
     description = "Git repository auth url for OPS"
 }
 
+variable "AWS_ANSIBLE_S3_BUCKET" {
+    description = "Ansible configuration file path"
+}
+
+variable "AWS_ANSIBLE_S3_BUCKET_DIR" {
+    description = "Ansible configuration file path"
+}
+
 variable "ANSIBLE_CONF_FILE" {
     description = "Ansible configuration file path"
 }
 
 variable "ANSIBLE_HOSTS_FILE" {
     description = "Ansible hosts file path"
+}
+
+variable "AWS_KOPS_STATE_S3_BUCKET"{
+    type = string
+    default = ""
+    description = "Main domain name is managed by cloudflare"
+}
+
+variable "AWS_KOPS_STATE_S3_BUCKET_DIR" {
+    type = string
+    default = ""
 }
 
 variable "KOPS_TPL_RENDERER_PY_FILE" {
@@ -174,3 +182,4 @@ variable "KOPS_CONF_YAML_FILE" {
 variable "K8S_MANIFEST_DIR" {
     description = "Kubernetes cluster"
 }
+
