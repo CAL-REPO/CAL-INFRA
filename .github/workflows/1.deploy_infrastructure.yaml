@@ -115,7 +115,7 @@ jobs:
             export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
             export HOST_GROUP="bastion"
             export PLAYBOOK_DIR="4.ANSIBLE/2.PLAYBOOK_DESTROY"
-            ansible-galaxy collection install community.kubernetes
+            ansible-galaxy collection install kubernetes.core
             bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           fi
 
@@ -154,7 +154,7 @@ jobs:
             export INVENTORY_FILE_PATH="${{ env.INFRA_ANSIBLE_HOSTS }}"
             export HOST_GROUP="bastion"
             export PLAYBOOK_DIR="4.ANSIBLE/1.PLAYBOOK_APPLY"
-            ansible-galaxy collection install community.kubernetes
+            ansible-galaxy collection install kubernetes.core
             bash "1.WORKFLOWS_SCRIPT/execute_ansible_playbook.sh"
           fi
 
