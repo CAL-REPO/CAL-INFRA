@@ -90,7 +90,7 @@ locals {
         {
             ALWAYS = true
             TYPE = "utf-8"
-            FILENAME = "${var.ANSIBLE_CONF_FILE}"
+            FILENAME = "../../${var.ANSIBLE_CONF_FILE}"
             CONTENT = <<-EOF
             [defaults]
             EOF
@@ -98,7 +98,7 @@ locals {
         {
             ALWAYS = true
             TYPE = "utf-8"
-            FILENAME = "${var.ANSIBLE_HOSTS_FILE}"
+            FILENAME = "../../${var.ANSIBLE_HOSTS_FILE}"
             CONTENT = <<-EOF
             [local]
             localhost ansible_connection=local ansible_user=runner
