@@ -9,12 +9,12 @@ server:
     pathType: ImplementationSpecific
     path: /
     hosts:
-      - argocd.calife.co.kr  # Replace with your domain
+      - argocd.devkops.calife.co.kr  # Replace with your domain
     tls: []
   tls:
-    # - secretName: argocd-tls
-    #   hosts:
-    #     - argocd.example.com
+    - secretName: argocd-tls
+      hosts:
+        - argocd.devkops.calife.co.kr
   config:
     repositories:
       - url: https://github.com/CAL-REPO/CAL-OPS
@@ -29,3 +29,6 @@ server:
       admissionregistration.k8s.io/MutatingWebhookConfiguration.resources={limits: {cpu: 100m, memory: 128Mi}}
       admissionregistration.k8s.io/MutatingWebhookConfiguration.resources.limits.cpu=100m
       admissionregistration.k8s.io/MutatingWebhookConfiguration.resources.limits.memory=128Mi
+
+
+# helm upgrade argocd -n argocd argo/argo-cd -f 05.helm_value_argocd.yaml
