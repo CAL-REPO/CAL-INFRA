@@ -23,7 +23,7 @@ locals {
                 cidr="${var.AWS_VPC0_Za_PUB_SN_CIDRs[1]}"
                 id="${module.AWS_REG1_VPC1.Za_SNs_ID[1]}"
                 name="${local.AWS_REG1_VPC1.Za_SNs_NAME[1]}"
-                type="Utility"
+                type="Public"
                 zone="ap-northeast-2a"
             },
             {

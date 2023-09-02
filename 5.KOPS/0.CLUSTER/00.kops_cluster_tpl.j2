@@ -14,6 +14,8 @@ spec:
   cloudProvider: {{ KOPS_CLUSTER_CLOUD }}
   configBase: {{ KOPS_STATE_S3 }}/{{ KOPS_CLUSTER_NAME }}
   containerRuntime: {{ KOPS_CLUSTER_CONTAINER_RUNTIME }}
+  awsLoadBalancerController:
+    enabled: true
   etcdClusters:
   {%- for ETCD in KOPS_CLUSTER_ETCD %}
   - cpuRequest: 200m

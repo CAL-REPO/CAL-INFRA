@@ -1,0 +1,54 @@
+# values.yaml
+
+argocd:
+  server:
+    extraArgs: []
+    service:
+      enabled: true
+      name: argocd-service
+      namespace: argocd
+      port: 80
+      annotations: {}
+      labels: {}
+      type: ClusterIP
+    ingress:
+      enabled: true
+      name: argocd-ingress
+      namespace: argocd
+      # pathType: Prefix
+  #   pathType: ImplementationSpecific
+  #   path: /
+      host: argocd.devkops.calife.co.kr
+      # tls:
+      #   - secretName: argocd-tls-secret
+      #     hosts:
+      #       - argocd.devkops.calife.co.kr
+      annotations:
+        kubernetes.io/ingress.class: alb
+    rules:
+      - host: argocd.example.com  # Your desired hostname
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: argocd-service
+                  port:
+                    number: 80  # Service port
+  config:
+    repositories:
+      - url: https://github.com/CAL-REPO/CAL-OPS
+        path: my-apps
+        usernameSecret:
+          name: argocd-repo-creds
+          key: test
+        passwordSecret:
+          name: argocd-repo-creds
+          key: test123
+    resourceCustomizations: |
+      admissionregistration.k8s.io/MutatingWebhookConfiguration.resources={limits: {cpu: 100m, memory: 128Mi}}
+      admissionregistration.k8s.io/MutatingWebhookConfiguration.resources.limits.cpu=100m
+      admissionregistration.k8s.io/MutatingWebhookConfiguration.resources.limits.memory=128Mi
+
+# helm upgrade argocd -n argocd argo-cd/argo-cd -f 05.helm_value_argocd.yaml
