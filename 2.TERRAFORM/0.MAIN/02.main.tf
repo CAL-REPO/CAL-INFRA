@@ -1,54 +1,55 @@
-module "AWS_REG1_KEY" {
+module "AWS_REG0_KEY" {
     source = "git::https://github.com/CAL-REPO/TERRAFORM-AWS-EC2KEY.git?ref=2.0"
     providers = {
         aws = aws.Seoul
     }
 
     PROFILE = local.AWS_PROFILEs[0].NAME
-    KEYs = local.AWS_REG1_KEYs
+    KEYs = local.AWS_REG0_KEYs
 }
 
-module "AWS_REG1_VPC1" {
+module "AWS_REG0_VPC0" {
     source = "git::https://github.com/CAL-REPO/TERRAFORM-AWS-VPC.git?ref=2.0"
     providers = {
         aws = aws.Seoul
     }
 
+    PRJ = var.PRJ
     PROFILE = local.AWS_PROFILEs[0].NAME
-    VPC = local.AWS_REG1_VPC1
-    RTBs = local.AWS_REG1_VPC1_RTBs
-    SGs = local.AWS_REG1_VPC1_SGs
+    VPC = local.AWS_REG0_VPC0
+    RTBs = local.AWS_REG0_VPC0_RTBs
+    SGs = local.AWS_REG0_VPC0_SGs
 }
 
-module "AWS_REG1_CONNECTION" {
+module "AWS_REG0_CONNECTION" {
     source = "git::https://github.com/CAL-REPO/TERRAFORM-AWS-CONNECTION.git?ref=2.0"
     providers = {
         aws = aws.Seoul
     }
 
     PROFILE = local.AWS_PROFILEs[0].NAME
-    IGW = local.AWS_REG1_IGW
+    IGW = local.AWS_REG0_IGW
 }
 
-module "AWS_REG1_VPC1_INS" {
+module "AWS_REG0_VPC0_INS" {
     source = "git::https://github.com/CAL-REPO/TERRAFORM-AWS-EC2INS.git?ref=2.0"
     providers = {
         aws = aws.Seoul
     }
 
     PROFILE = local.AWS_PROFILEs[0].NAME
-    INSs = local.AWS_REG1_VPC1_INSs
-    INS_UDs = local.AWS_REG1_VPC1_INS_UDs
+    INSs = local.AWS_REG0_VPC0_INSs
+    INS_UDs = local.AWS_REG0_VPC0_INS_UDs
 }
 
-module "AWS_REG1_ADD" {
+module "AWS_REG0_ADD" {
     source = "git::https://github.com/CAL-REPO/TERRAFORM-AWS-ADD.git?ref=2.0"
     providers = {
         aws = aws.Seoul
     }
 
     PROFILE = local.AWS_PROFILEs[0].NAME
-    EIPs = local.AWS_REG1_EIPs
+    EIPs = local.AWS_REG0_EIPs
 }
 
 module "AWS_GLOBAL_SERVICE" {

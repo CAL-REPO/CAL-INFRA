@@ -1,27 +1,21 @@
-variable "PRJ_NAME"{
-    type = string
-    default = ""
-}    
-
-variable "PRJ_VERSION"{
-    type = string
-    default = ""
+variable "PRJ"{
+    description = ""
 }
 
 variable "AWS_PROFILE_NAME"{
-    type = string
-    default = ""
+    description = ""
 }
 
 variable "AWS_KEY_S3_BUCKET_NAME"{
     type = string
     default = ""
-    description = "Main domain name is managed by cloudflare"
+    description = ""
 }
 
 variable "AWS_KEY_S3_BUCKET_DIR"{
     type = string
     default = ""
+    description = ""
 }
 
 variable "AWS_VPC_CIDRs" {
@@ -68,6 +62,7 @@ variable "AWS_VPC0_Zc_PRI_SN_CIDRs" {
     type = list(string)
     default = []
 }
+
 variable "AWS_VPC0_Zc_INS_IPV4s" {
     type = list(string)
     default = []
@@ -136,19 +131,19 @@ variable "OPS_GIT_REPO_AUTH_URL" {
     description = "Git repository auth url for OPS"
 }
 
-# variable "AWS_ANSIBLE_S3_BUCKET" {
-#     description = "Ansible configuration file path"
-# }
-
-# variable "AWS_ANSIBLE_S3_BUCKET_DIR" {
-#     description = "Ansible configuration file path"
-# }
+variable "ANSIBLE_ENV_S3_BUCKET_DIR" {
+    description = "Ansible configuration file path"
+}
 
 variable "ANSIBLE_CONF_FILE" {
+    type = string
+    default = ""
     description = "Ansible configuration file path"
 }
 
 variable "ANSIBLE_HOSTS_FILE" {
+    type = string
+    default = ""
     description = "Ansible hosts file path"
 }
 
@@ -163,23 +158,32 @@ variable "AWS_KOPS_STATE_S3_BUCKET_DIR" {
     default = ""
 }
 
-variable "KOPS_TPL_RENDERER_PY_FILE" {
+variable "AWS_KOPS_TPL_RENDERER_PY_FILE" {
+    type = string
+    default = ""
     description = "Python script path to render from kubenetes cluster template j2 file to kubernetes cluster configuration yaml file"
 }
 
-variable "KOPS_TPL_J2_FILE" {
+variable "AWS_KOPS_TPL_J2_FILE" {
+    type = string
+    default = ""
     description = "Kubernetes cluster template j2 file path to set as ansible variant"
 }
 
-variable "KOPS_TPL_VALUE_JSON_FILE" {
+variable "AWS_KOPS_TPL_VALUE_JSON_FILE" {
+    type = string
+    default = ""
     description = "Kubernetes cluster template value json file path to set as ansible variant"
 }
 
-variable "KOPS_CONF_YAML_FILE" {
+variable "AWS_KOPS_CONF_YAML_FILE" {
+    type = string
+    default = ""
     description = "Kubernetes cluster configuration file path to set as ansible variant"
 }
 
-variable "K8S_MANIFEST_DIR" {
+variable "AWS_KOPS_MANIFEST_DIR" {
+    type = string
+    default = ""
     description = "Kubernetes cluster"
 }
-

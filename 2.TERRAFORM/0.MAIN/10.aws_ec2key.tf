@@ -1,6 +1,6 @@
-# REG1
+# REG0
 locals {
-    AWS_REG1_KEYs = [
+    AWS_REG0_KEYs = [
         {
             NAME = "${var.PRJ_NAME}-AWS-${local.AWS_PROFILEs[0].NAME}"
             ALGORITHM = "RSA"
