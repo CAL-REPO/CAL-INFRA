@@ -83,7 +83,7 @@ jobs:
           fi
 
       - name: Set up terraform version
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
 
       - name: Initialize terraform for infrastruture
         working-directory: deploy/2.TERRAFORM/01.SEOUL
